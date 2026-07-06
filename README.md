@@ -1,13 +1,13 @@
-# StadiumIQ — GenAI Stadium Operations for FIFA World Cup 2026™
+# ArenaIQ — GenAI Stadium Operations for FIFA World Cup 2026™
 
 Built for the **Hack2Skill PromptWars Challenge 4**.
 
-StadiumIQ is a **GenAI-powered smart stadium platform for FIFA World Cup 2026 that enables real-time crowd management, AI-driven fan navigation, multi-language assistance, and staff coordination**. It provides a fully accessible command center and user experience tailored for fans, volunteers, venue staff, and tournament organizers.
+ArenaIQ is a **GenAI-powered smart stadium platform for FIFA World Cup 2026 that enables real-time crowd management, AI-driven fan navigation, multi-language assistance, and staff coordination**. It provides a fully accessible command center and user experience tailored for fans, volunteers, venue staff, and tournament organizers.
 
 ---
 
 ## 📋 Project Purpose & Overview
-StadiumIQ is built to address the extreme operational challenges of a FIFA World Cup stadium. On matchdays, over 80,000 international fans navigate concourses, concessions, and seating gates. Real-time bottlenecks, multilingual communication gaps, and security coordination are key stress points. StadiumIQ addresses these using a combination of **Generative AI** (for contextual, natural translation and guidance) and **Deterministic Algorithms** (for reliable path calculation).
+ArenaIQ is built to address the extreme operational challenges of a FIFA World Cup stadium. On matchdays, over 80,000 international fans navigate concourses, concessions, and seating gates. Real-time bottlenecks, multilingual communication gaps, and security coordination are key stress points. ArenaIQ addresses these using a combination of **Generative AI** (for contextual, natural translation and guidance) and **Deterministic Algorithms** (for reliable path calculation).
 
 ### The 8 Prompt Challenge Angles Addressed
 1. **Navigation (Deep-built)**: Algorithmic shortest-path routing (Dijkstra) with crowd density weight adjustments. Gemini is then used server-side to translate node lists into step-by-step descriptive walk paths.
@@ -29,7 +29,7 @@ StadiumIQ is built to address the extreme operational challenges of a FIFA World
 ---
 
 ## 🧠 Prompt Engineering Strategy
-StadiumIQ utilizes a modular, secure, and hallucination-free prompt strategy:
+ArenaIQ utilizes a modular, secure, and hallucination-free prompt strategy:
 1. **Separation of Concerns**: Gemini is never allowed to "invent" routes. Instead, a Dijkstra solver computes the path. Gemini is then passed the path and current zone capacity/occupancy context as a JSON block, generating a friendly step-by-step explanation.
 2. **System Instruction Constraints**: System prompts constrain the model's domain knowledge. Gemini is instructed to refuse non-stadium queries politely with a standard fallback response: *"I can only assist with World Cup stadium operations, facilities, concessions, schedules, and navigation."*
 3. **Localization**: The assistant prompt forces Gemini to respond strictly in the user's preferred language (e.g. Arabic, Hindi, Spanish) to ensure consistent, natural outputs.
@@ -71,3 +71,4 @@ npm run test
 ```bash
 npm run build
 ```
+# ArenaIQ
