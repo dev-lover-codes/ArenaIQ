@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StadiumIQ — GenAI Stadium Operations for FIFA World Cup 2026™
 
-## Getting Started
+Built for the **Hack2Skill PromptWars Challenge 4**.
 
-First, run the development server:
+StadiumIQ is a **GenAI-powered smart stadium platform for FIFA World Cup 2026 that enables real-time crowd management, AI-driven fan navigation, multi-language assistance, and staff coordination**. It provides a fully accessible command center and user experience tailored for fans, volunteers, venue staff, and tournament organizers.
 
+---
+
+## 📋 Project Purpose & Overview
+StadiumIQ is built to address the extreme operational challenges of a FIFA World Cup stadium. On matchdays, over 80,000 international fans navigate concourses, concessions, and seating gates. Real-time bottlenecks, multilingual communication gaps, and security coordination are key stress points. StadiumIQ addresses these using a combination of **Generative AI** (for contextual, natural translation and guidance) and **Deterministic Algorithms** (for reliable path calculation).
+
+### The 8 Prompt Challenge Angles Addressed
+1. **Navigation (Deep-built)**: Algorithmic shortest-path routing (Dijkstra) with crowd density weight adjustments. Gemini is then used server-side to translate node lists into step-by-step descriptive walk paths.
+2. **Crowd Management (Deep-built)**: Live tracking of zone occupancies and densities with color-coded heatmap visualizations (green, yellow, red, critical red).
+3. **Multilingual Assistance (Deep-built)**: Gemini-powered chat assistant answering stadium-specific operations queries in English, Spanish, French, Arabic, Portuguese, and Hindi.
+4. **Accessibility (Cross-cutting)**: WCAG 2.1 AA compliant. High-contrast colors, aria-live announcements for real-time occupancy updates, keyboard navigation, and explicit label structures.
+5. **Real-time Decision Support & Operational Intelligence**: The system automatically reroutes users away from crowded gates and concourses. Staff can update zone status instantly to close or flag congested areas.
+6. **Venue Staff & Volunteer Coordination**: Staff panel displaying volunteer tasks grouped by priority level, zone status overview, and message broadcasts.
+
+---
+
+## 🛠️ Tech Stack
+* **Framework**: Next.js 16 (App Router)
+* **Styling**: Tailwind CSS v4 (vanilla CSS variables) + Custom WCAG 2.1 AA themes
+* **Backend**: Supabase (Auth + Postgres + Realtime subscriptions)
+* **AI Engine**: Gemini 1.5 Flash (server-side only via secure `/api/gemini` gateway)
+* **Testing**: Vitest + React Testing Library + JSDOM (100% pass)
+
+---
+
+## 🧠 Prompt Engineering Strategy
+StadiumIQ utilizes a modular, secure, and hallucination-free prompt strategy:
+1. **Separation of Concerns**: Gemini is never allowed to "invent" routes. Instead, a Dijkstra solver computes the path. Gemini is then passed the path and current zone capacity/occupancy context as a JSON block, generating a friendly step-by-step explanation.
+2. **System Instruction Constraints**: System prompts constrain the model's domain knowledge. Gemini is instructed to refuse non-stadium queries politely with a standard fallback response: *"I can only assist with World Cup stadium operations, facilities, concessions, schedules, and navigation."*
+3. **Localization**: The assistant prompt forces Gemini to respond strictly in the user's preferred language (e.g. Arabic, Hindi, Spanish) to ensure consistent, natural outputs.
+4. **Server-Side Gateway**: All Gemini API calls are routed through a single `/api/gemini` endpoint. API keys are kept in `.env.local` and never exposed to the client.
+
+---
+
+## ⚙️ Crowd Simulation Mechanics
+* A Next.js API endpoint (`/api/simulate-crowd`) simulates crowd movement dynamically.
+* Every 15–30 seconds, the simulation nudges the `current_occupancy` of each zone by a random delta (-8% to +8% of capacity) and appends a row to the `crowd_events` table.
+* The frontend dashboard subscribes to these updates in real-time using Supabase Realtime client connections, updating the heatmap dynamically.
+
+---
+
+## 🏃 Local Setup & Commands
+
+### 1. Configure Environment Variables
+Copy `.env.example` to `.env.local` and set up your Supabase and Gemini credentials:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run Development Server
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Run the Test Suite
+```bash
+npm run test
+```
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 5. Build for Production
+```bash
+npm run build
+```

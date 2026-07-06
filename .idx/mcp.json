@@ -7,6 +7,48 @@
         "firebase-tools@latest",
         "experimental:mcp"
       ]
+    },
+    "stitch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@_davideast/stitch-mcp",
+        "proxy"
+      ],
+      "env": {
+        "STITCH_API_KEY": "YOUR_STITCH_API_KEY_HERE"
+      }
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "YOUR_SUPABASE_ACCESS_TOKEN_HERE"
+      }
+    },
+    "vercel": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-vercel@latest"
+      ],
+      "env": {
+        "VERCEL_ACCESS_TOKEN": "YOUR_VERCEL_ACCESS_TOKEN_HERE"
+      }
+    },
+    "21st-dev": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@21st-dev/magic@latest"
+      ],
+      "env": {
+        "API_KEY": "YOUR_21ST_DEV_API_KEY_HERE"
+      }
     }
   }
 }
+
