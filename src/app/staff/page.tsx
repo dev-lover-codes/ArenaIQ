@@ -534,7 +534,7 @@ export default function StaffPage() {
       {/* Footer */}
       <footer className="border-t border-zinc-850 bg-zinc-950 py-6 mt-16 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 FIFA World Cup StadiumIQ. Staff Command Portal.</p>
+          <p>© 2026 FIFA World Cup ArenaIQ. Staff Command Portal.</p>
           <div className="flex items-center space-x-1.5 text-red-500">
             <Accessibility className="h-4 w-4" />
             <span>Operational High Contrast Theme Active</span>

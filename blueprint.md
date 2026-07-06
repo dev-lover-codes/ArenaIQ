@@ -1,7 +1,7 @@
-# StadiumIQ Blueprint & Roadmap
+# ArenaIQ Blueprint & Roadmap
 
 ## Project Overview
-StadiumIQ is a Generative AI-enabled platform for the FIFA World Cup 2026 stadium operations, built for the Hack2Skill PromptWars Challenge 4. The platform addresses key operational challenges and enhances the tournament experience for fans, organizers, volunteers, and venue staff.
+ArenaIQ is a Generative AI-enabled platform for the FIFA World Cup 2026 stadium operations, built for the Hack2Skill PromptWars Challenge 4. The platform addresses key operational challenges and enhances the tournament experience for fans, organizers, volunteers, and venue staff.
 
 ### Selected Pillars
 1. **Smart Navigation**: Algorithmic route suggestions computed over real zone-graph data (avoiding hallucinated paths), with Gemini providing natural-language explanations.

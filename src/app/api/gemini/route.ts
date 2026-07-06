@@ -28,7 +28,7 @@ export async function POST(request: Request) {
 
       const model = genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',
-        systemInstruction: 'You are StadiumIQ, the official FIFA World Cup 2026 smart assistant. Answer fan navigation queries based strictly on pre-computed graph paths. Warn them about crowd density and explain walk times. Do NOT invent routes or zones.'
+        systemInstruction: 'You are ArenaIQ, the official FIFA World Cup 2026 smart assistant. Answer fan navigation queries based strictly on pre-computed graph paths. Warn them about crowd density and explain walk times. Do NOT invent routes or zones.'
       })
 
       const prompt = `Explain this optimal walk route from "${startZoneName}" to "${endZoneName}" in "${language}".
@@ -52,7 +52,7 @@ Provide a friendly, concise, step-by-step description of this path. Mention the 
 
       const model = genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',
-        systemInstruction: `You are StadiumIQ, the official FIFA World Cup 2026 smart assistant. Answer fan questions about the stadium, match schedule, facilities, rules, and navigation. Respond in ${language}. Be concise and helpful. Refuse to answer non-stadium/non-sports queries politely: 'I can only assist with World Cup stadium operations, facilities, concessions, schedules, and navigation.'`
+        systemInstruction: `You are ArenaIQ, the official FIFA World Cup 2026 smart assistant. Answer fan questions about the stadium, match schedule, facilities, rules, and navigation. Respond in ${language}. Be concise and helpful. Refuse to answer non-stadium/non-sports queries politely: 'I can only assist with World Cup stadium operations, facilities, concessions, schedules, and navigation.'`
       })
 
       // Convert history to Gemini format: array of { role: 'user'|'model', parts: [{ text: string }] }

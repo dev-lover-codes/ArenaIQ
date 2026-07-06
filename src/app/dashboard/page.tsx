@@ -481,7 +481,7 @@ export default function DashboardPage() {
       {/* Footer */}
       <footer className="border-t border-zinc-800 bg-zinc-950 py-6 mt-16 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 FIFA World Cup StadiumIQ. Real-time operations dashboard.</p>
+          <p>© 2026 FIFA World Cup ArenaIQ. Real-time operations dashboard.</p>
           <div className="flex items-center space-x-2 text-emerald-400">
             <Accessibility className="h-4 w-4" />
             <span>WCAG 2.1 AA Compliant (High Contrast Checked)</span>

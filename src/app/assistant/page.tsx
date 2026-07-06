@@ -80,7 +80,7 @@ export default function AssistantPage() {
       } else {
         setUser(user)
         // Look for existing session in localStorage
-        const storedSession = localStorage.getItem(`stadiumiq_session_${user.id}`)
+        const storedSession = localStorage.getItem(`arenaaiq_session_${user.id}`)
         if (storedSession) {
           setSessionId(storedSession)
           loadSessionHistory(storedSession)
@@ -106,7 +106,7 @@ export default function AssistantPage() {
     const updatedMessages = [...messages, { role: 'user' as const, text: userMessageText }]
     setMessages(updatedMessages)
     setSending(true)
-    setLiveChatAnnouncement('Sending message to StadiumIQ assistant...')
+    setLiveChatAnnouncement('Sending message to ArenaIQ assistant...')
 
     try {
       const res = await fetch('/api/chat', {
@@ -127,7 +127,7 @@ export default function AssistantPage() {
         if (!sessionId && data.sessionId) {
           setSessionId(data.sessionId)
           if (user) {
-            localStorage.setItem(`stadiumiq_session_${user.id}`, data.sessionId)
+            localStorage.setItem(`arenaaiq_session_${user.id}`, data.sessionId)
           }
         }
         setLiveChatAnnouncement('Reply received from assistant.')
@@ -147,7 +147,7 @@ export default function AssistantPage() {
     setMessages([])
     setSessionId(null)
     if (user) {
-      localStorage.removeItem(`stadiumiq_session_${user.id}`)
+      localStorage.removeItem(`arenaaiq_session_${user.id}`)
     }
     setLiveChatAnnouncement('Chat session cleared.')
   }
@@ -242,7 +242,7 @@ export default function AssistantPage() {
               <Sparkles className="h-5 w-5" />
             </span>
             <div>
-              <h1 className="text-sm font-bold text-white">StadiumIQ Smart Helper</h1>
+              <h1 className="text-sm font-bold text-white">ArenaIQ Smart Helper</h1>
               <p className="text-xs text-slate-400">Ask about facilities, match schedules, seating maps, concessions, and transport guidelines.</p>
             </div>
           </div>
@@ -264,7 +264,7 @@ export default function AssistantPage() {
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-slate-500 max-w-sm mx-auto">
               <Sparkles className="h-10 w-10 text-zinc-700 mb-3" />
-              <h2 className="text-md font-bold text-slate-400">Welcome to StadiumIQ Support</h2>
+              <h2 className="text-md font-bold text-slate-400">Welcome to ArenaIQ Support</h2>
               <p className="text-xs mt-1 leading-relaxed">
                 Choose your language above and ask operational or facility questions. 
                 (Example: &quot;Where is concession plaza?&quot; or &quot;What is Gate A status?&quot;)
@@ -333,7 +333,7 @@ export default function AssistantPage() {
               type="text"
               value={inputMsg}
               onChange={(e) => setInputMsg(e.target.value)}
-              placeholder="Ask StadiumIQ Helper..."
+              placeholder="Ask ArenaIQ Helper..."
               disabled={sending}
               required
               aria-label="Type your message"
@@ -355,7 +355,7 @@ export default function AssistantPage() {
       {/* Footer */}
       <footer className="border-t border-zinc-850 bg-zinc-950 py-4 shrink-0 text-center text-[10px] text-slate-600">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
-          <p>© 2026 StadiumIQ AI Assistant.</p>
+          <p>© 2026 ArenaIQ AI Assistant.</p>
           <div className="flex items-center space-x-1.5 text-emerald-500">
             <Accessibility className="h-3.5 w-3.5" />
             <span>WCAG 2.1 AA compliant keyboard layout</span>

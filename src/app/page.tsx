@@ -42,7 +42,7 @@ export default function Home() {
           </h1>
           
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-400 leading-relaxed">
-            StadiumIQ leverages Generative AI and real-time spatial graph routing to streamline navigation, manage crowd densities, and provide instant multilingual support.
+            ArenaIQ leverages Generative AI and real-time spatial graph routing to streamline navigation, manage crowd densities, and provide instant multilingual support.
           </p>
 
           <div className="pt-8 flex flex-col sm:flex-row gap-4 justify-center">
@@ -67,7 +67,7 @@ export default function Home() {
       <section className="bg-zinc-900/40 border-t border-zinc-800 py-20 px-4">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold text-center text-white mb-12">
-            The Three Pillars of StadiumIQ
+            The Three Pillars of ArenaIQ
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
