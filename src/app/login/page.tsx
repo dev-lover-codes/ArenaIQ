@@ -74,7 +74,7 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-radial from-[#12192c] via-[#0a0f1e] to-black px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+    <main role="main" className="flex min-h-screen flex-col items-center justify-center bg-radial from-[#12192c] via-[#0a0f1e] to-black px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       
       {/* Decorative Outer Layout Accents */}
       <div className="absolute top-10 left-10 w-24 h-24 border-t-2 border-l-2 border-navy-border/50 pointer-events-none hidden md:block"></div>

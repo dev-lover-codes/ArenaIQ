@@ -95,9 +95,10 @@ serve(async (req) => {
         status: 200,
       }
     )
-  } catch (error: any) {
+  } catch (error) {
+    const errMessage = error instanceof Error ? error.message : 'Unknown simulation error'
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ success: false, error: errMessage }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500,

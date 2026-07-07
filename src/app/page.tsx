@@ -4,7 +4,7 @@ import { Shield, ArrowRight, Map, Users, Languages, Accessibility } from 'lucide
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-navy-deep text-slate-100 font-sans stadium-grid">
+    <main role="main" className="flex min-h-screen flex-col bg-navy-deep text-slate-100 font-sans stadium-grid">
       
       {/* Header */}
       <header className="border-b border-navy-border bg-navy-deep/80 backdrop-blur-md sticky top-0 z-50">

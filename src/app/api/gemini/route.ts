@@ -6,14 +6,18 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { action, language = 'en' } = body
 
-    // Validation for extended API tests
+    // Validation for prompt/message character length limits
+    if (body.prompt && typeof body.prompt === 'string' && body.prompt.length > 2000) {
+      return NextResponse.json({ success: false, error: 'Prompt over 2000 chars.' }, { status: 400 })
+    }
+    if (body.message && typeof body.message === 'string' && body.message.length > 2000) {
+      return NextResponse.json({ success: false, error: 'Message over 2000 chars.' }, { status: 400 })
+    }
+
     const hasPromptOrModel = ('prompt' in body) || ('model' in body) || (!body.action)
     if (hasPromptOrModel) {
       if (!body.prompt) {
         return NextResponse.json({ success: false, error: 'Prompt is required.' }, { status: 400 })
-      }
-      if (body.prompt.length > 2000) {
-        return NextResponse.json({ success: false, error: 'Prompt over 2000 chars.' }, { status: 400 })
       }
       if (!body.model) {
         return NextResponse.json({ success: false, error: 'Model is required.' }, { status: 400 })

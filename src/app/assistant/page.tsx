@@ -235,7 +235,7 @@ export default function AssistantPage() {
       </header>
 
       {/* Main Chat Area */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 flex flex-col min-h-0">
+      <main role="main" className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 flex flex-col min-h-0">
         
         {/* Top Info Banner */}
         <section aria-label="Assistant Info" className="bg-zinc-900/30 border border-zinc-850 p-4 rounded-xl mb-4 shrink-0 flex items-center justify-between">

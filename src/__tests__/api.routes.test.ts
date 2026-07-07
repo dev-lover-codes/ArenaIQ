@@ -28,9 +28,9 @@ vi.mock('@supabase/ssr', () => {
           })
         },
         from: vi.fn().mockImplementation((table) => {
-          const makeBuilder = (dataValue: any) => {
+          const makeBuilder = (dataValue: unknown) => {
             const builder = {
-              then: (onfulfilled: any) => Promise.resolve({ data: dataValue, error: null }).then(onfulfilled),
+              then: (onfulfilled: (res: { data: unknown; error: Error | null }) => unknown) => Promise.resolve({ data: dataValue, error: null }).then(onfulfilled),
               eq: () => makeBuilder(dataValue),
               single: () => Promise.resolve({ data: dataValue, error: null }),
               select: () => makeBuilder(dataValue),
@@ -40,7 +40,7 @@ vi.mock('@supabase/ssr', () => {
             return builder
           }
 
-          let defaultData: any = []
+          let defaultData: unknown = []
           if (table === 'zones') {
             defaultData = [
               { id: '11111111-1111-1111-1111-111111111111', name: 'Gate A', status: 'open', capacity: 1000, current_occupancy: 100 },

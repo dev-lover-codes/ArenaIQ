@@ -298,7 +298,7 @@ export default function StaffPage() {
       </header>
 
       {/* Main Staff Container */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* Banner */}
         <div>
@@ -356,7 +356,7 @@ export default function StaffPage() {
                 Broadcast Staff Alert
               </h2>
 
-              <form onSubmit={handleBroadcastAlert} className="space-y-4">
+              <form onSubmit={handleBroadcastAlert} className="space-y-4" aria-label="Broadcast alert form">
                 
                 <div>
                   <label htmlFor="alert-text" className="block text-sm font-semibold text-slate-300">

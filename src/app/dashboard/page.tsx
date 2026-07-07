@@ -278,7 +278,7 @@ export default function DashboardPage() {
       </header>
 
       {/* Main Dashboard Layout */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <main role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         
         {/* Title and Controls Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -344,7 +344,7 @@ export default function DashboardPage() {
                 </span>
                 <span className="text-xs text-slate-400 flex items-center gap-1 font-semibold">
                   <Clock className="h-3.5 w-3.5 text-gold" />
-                  80' Played
+                  80&apos; Played
                 </span>
               </div>
               
