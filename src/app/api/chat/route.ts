@@ -67,7 +67,8 @@ export async function POST(request: Request) {
       } else {
         throw new Error(geminiData.error || 'Gemini error')
       }
-    } catch {
+    } catch (err) {
+      console.error('Chat API Error:', err)
       assistantReply = `[AI Assistant - ${language.toUpperCase()}] I received your query: "${message}". Let me know if you need directions or crowd status updates!`
     }
 
