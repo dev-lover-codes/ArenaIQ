@@ -159,30 +159,30 @@ export default function DashboardPage() {
     if (ratio >= 0.9) {
       return {
         level: 'Critical',
-        bg: 'bg-red-950/70 border-red-500/50',
-        text: 'text-red-200 font-bold',
-        badge: 'bg-red-500 text-white font-bold',
+        bg: 'bg-red-950/20 border-navy-border border-l-4 border-l-red-500',
+        text: 'text-red-400 font-bold',
+        badge: 'bg-red-500/20 text-red-400 font-bold border border-red-500/30',
       }
     }
     if (ratio >= 0.7) {
       return {
         level: 'High',
-        bg: 'bg-orange-950/40 border-orange-500/40',
-        text: 'text-orange-300 font-semibold',
-        badge: 'bg-orange-600 text-white font-semibold',
+        bg: 'bg-orange-950/15 border-navy-border border-l-4 border-l-orange-500',
+        text: 'text-orange-455 font-semibold',
+        badge: 'bg-orange-500/20 text-orange-400 font-semibold border border-orange-500/30',
       }
     }
     if (ratio >= 0.4) {
       return {
         level: 'Medium',
-        bg: 'bg-amber-950/20 border-amber-600/30',
-        text: 'text-amber-300',
-        badge: 'bg-amber-500 text-zinc-950 font-medium',
+        bg: 'bg-amber-950/15 border-navy-border border-l-4 border-l-amber-500',
+        text: 'text-amber-400',
+        badge: 'bg-amber-500/20 text-amber-400 font-medium border border-amber-500/30',
       }
     }
     return {
       level: 'Low',
-      bg: 'bg-zinc-900/40 border-zinc-800',
+      bg: 'bg-navy-card/45 border-navy-border border-l-4 border-l-emerald-500',
       text: 'text-emerald-400',
       badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
     }
@@ -196,14 +196,14 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+      <div className="flex min-h-screen items-center justify-center bg-navy-deep text-white">
+        <Loader2 className="h-8 w-8 animate-spin text-gold" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-slate-100 font-sans">
+    <div className="min-h-screen bg-navy-deep text-slate-100 font-sans stadium-grid">
       
       {/* Accessibility Announcement Container */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
@@ -211,17 +211,17 @@ export default function DashboardPage() {
       </div>
 
       {/* Navigation Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-navy-border bg-navy-card/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             
             {/* Logo */}
             <div className="flex items-center space-x-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-500">
-                <Activity className="h-5 w-5 text-white" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_10px_rgba(255,215,0,0.3)]">
+                <Activity className="h-5 w-5 text-navy-deep" />
               </span>
               <span className="text-xl font-bold tracking-tight text-white">
-                Arena<span className="text-emerald-400">IQ</span>
+                Arena<span className="text-gold">IQ</span>
               </span>
             </div>
 
@@ -229,27 +229,27 @@ export default function DashboardPage() {
             <nav className="hidden md:flex space-x-1" aria-label="Main Navigation">
               <Link 
                 href="/dashboard" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold bg-zinc-800 text-emerald-400 border border-zinc-700"
+                className="px-3 py-2 rounded-lg text-sm font-semibold bg-navy-deep text-gold border border-navy-border"
                 aria-current="page"
               >
                 Heatmap Dashboard
               </Link>
               <Link 
                 href="/navigate" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
               >
                 Smart Route Planner
               </Link>
               <Link 
                 href="/assistant" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
               >
                 Multilingual AI Assistant
               </Link>
               {(profile?.role === 'staff' || profile?.role === 'organizer') && (
                 <Link 
                   href="/staff" 
-                  className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                  className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
                 >
                   Staff Panel
                 </Link>
@@ -283,9 +283,12 @@ export default function DashboardPage() {
         {/* Title and Controls Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
+            <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3" style={{ fontWeight: 900, letterSpacing: '-0.04em' }}>
               Crowd Density Heatmap
-              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-ping" aria-hidden="true"></span>
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600/90 text-white animate-pulse border border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]">
+                <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping"></span>
+                <span>LIVE CONTROL</span>
+              </span>
             </h1>
             <p className="mt-1 text-slate-400">
               Live updates of stadium zones. Changes propagate instantly using Supabase Realtime subscriptions.
@@ -301,7 +304,7 @@ export default function DashboardPage() {
             <button
               onClick={triggerSimulation}
               disabled={simulating}
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition focus:outline-hidden focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
+              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-electric-blue hover:bg-[#0092c7] text-white font-bold text-sm transition focus:outline-hidden focus:ring-2 focus:ring-electric-blue disabled:opacity-50"
               aria-label="Trigger crowd movement simulation step"
             >
               {simulating ? (
@@ -321,11 +324,11 @@ export default function DashboardPage() {
 
         {/* Mobile Navigation fallback */}
         <div className="md:hidden grid grid-cols-4 gap-2">
-          <Link href="/dashboard" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-zinc-800 text-emerald-400 border border-zinc-700">Heatmap</Link>
-          <Link href="/navigate" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-zinc-900 text-slate-300">Navigate</Link>
-          <Link href="/assistant" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-zinc-900 text-slate-300">AI Chat</Link>
+          <Link href="/dashboard" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-navy-card text-gold border border-navy-border">Heatmap</Link>
+          <Link href="/navigate" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-navy-deep text-slate-300 border border-navy-border">Navigate</Link>
+          <Link href="/assistant" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-navy-deep text-slate-300 border border-navy-border">AI Chat</Link>
           {(profile?.role === 'staff' || profile?.role === 'organizer') && (
-            <Link href="/staff" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-zinc-900 text-slate-300">Staff</Link>
+            <Link href="/staff" className="px-2 py-2 rounded-lg text-xs font-bold text-center bg-navy-deep text-slate-300 border border-navy-border">Staff</Link>
           )}
         </div>
 
@@ -333,41 +336,44 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
           {/* Match Info Card */}
-          <section aria-label="Current Matchday Information" className="border border-zinc-800 bg-zinc-900/30 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+          <section aria-label="Current Matchday Information" className="border border-navy-border bg-navy-card/40 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
             <div>
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20">
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20">
                   LIVE MATCHDAY
                 </span>
-                <span className="text-xs text-slate-400 flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  80&apos; Played
+                <span className="text-xs text-slate-400 flex items-center gap-1 font-semibold">
+                  <Clock className="h-3.5 w-3.5 text-gold" />
+                  80' Played
                 </span>
               </div>
-              <h2 className="text-2xl font-black tracking-tight text-white mt-4 flex items-center justify-between">
-                <span>Mexico</span>
-                <span className="text-emerald-400 px-4">2 - 1</span>
-                <span>USA</span>
-              </h2>
-              <p className="text-sm text-slate-400 mt-2 font-medium">FIFA World Cup 2026™ • Group Stage Match</p>
+              
+              <div className="mt-4 p-4 rounded-xl bg-navy-deep/80 border border-navy-border flex items-center justify-between shadow-inner">
+                <span className="text-xl sm:text-2xl font-black tracking-wider uppercase text-white">Mexico</span>
+                <span className="text-3xl sm:text-4xl font-black tracking-widest text-gold font-mono bg-black/60 px-4 py-1.5 rounded-lg border border-navy-border shadow-inner">
+                  2 - 1
+                </span>
+                <span className="text-xl sm:text-2xl font-black tracking-wider uppercase text-white">USA</span>
+              </div>
+              <p className="text-sm text-slate-400 mt-3 font-semibold text-center sm:text-left">FIFA World Cup 2026™ • Group Stage Match</p>
             </div>
             
-            <div className="mt-6 pt-6 border-t border-zinc-850 grid grid-cols-2 gap-4 text-xs text-slate-400">
+            <div className="mt-6 pt-6 border-t border-navy-border grid grid-cols-2 gap-4 text-xs text-slate-400">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-4 w-4 text-emerald-500" />
+                <Calendar className="h-4 w-4 text-electric-blue" />
                 <span>Monday, July 6, 2026</span>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-emerald-500" />
+                <MapPin className="h-4 w-4 text-electric-blue" />
                 <span>Estadio Azteca, CDMX</span>
               </div>
             </div>
           </section>
 
           {/* Quick Navigation widget */}
-          <section aria-label="Quick Routing Tool" className="border border-zinc-800 bg-zinc-900/30 p-6 rounded-2xl shadow-xl">
+          <section aria-label="Quick Routing Tool" className="border border-navy-border bg-navy-card/40 p-6 rounded-2xl shadow-xl">
             <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-              <Compass className="h-5 w-5 text-emerald-400" />
+              <Compass className="h-5 w-5 text-gold" />
               Quick Navigation Assistant
             </h2>
             <form onSubmit={handleQuickNavSubmit} className="space-y-4" aria-label="Quick Navigation Form">
@@ -381,7 +387,7 @@ export default function DashboardPage() {
                     value={quickStart}
                     onChange={(e) => setQuickStart(e.target.value)}
                     required
-                    className="mt-1.5 block w-full rounded-lg border border-zinc-800 bg-zinc-950 py-1.5 px-3.5 text-xs text-white focus:border-emerald-500 focus:outline-hidden"
+                    className="mt-1.5 block w-full rounded-lg border border-navy-border bg-navy-deep py-2 px-3 text-xs text-white focus:border-gold focus:outline-hidden"
                   >
                     <option value="">Select current gate...</option>
                     {zones.filter(z => z.name.toLowerCase().includes('gate')).map((z) => (
@@ -398,7 +404,7 @@ export default function DashboardPage() {
                     value={quickEnd}
                     onChange={(e) => setQuickEnd(e.target.value)}
                     required
-                    className="mt-1.5 block w-full rounded-lg border border-zinc-800 bg-zinc-950 py-1.5 px-3.5 text-xs text-white focus:border-emerald-500 focus:outline-hidden"
+                    className="mt-1.5 block w-full rounded-lg border border-navy-border bg-navy-deep py-2 px-3 text-xs text-white focus:border-gold focus:outline-hidden"
                   >
                     <option value="">Select section...</option>
                     {zones.filter(z => !z.name.toLowerCase().includes('gate')).map((z) => (
@@ -410,7 +416,7 @@ export default function DashboardPage() {
               <button
                 type="submit"
                 disabled={!quickStart || !quickEnd}
-                className="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition focus:outline-hidden disabled:opacity-50"
+                className="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-gold hover:bg-yellow-400 text-navy-deep font-bold text-xs transition focus:outline-hidden disabled:opacity-50"
               >
                 Plan Crowd-Aware Route
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -430,7 +436,7 @@ export default function DashboardPage() {
             return (
               <article 
                 key={zone.id} 
-                className={`border rounded-2xl p-6 transition shadow-md flex flex-col justify-between ${details.bg}`}
+                className={`border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between ${details.bg}`}
               >
                 <div>
                   {/* Header Row */}
@@ -439,7 +445,7 @@ export default function DashboardPage() {
                       <h2 className="text-lg font-bold text-white tracking-tight">{zone.name}</h2>
                       <span className="text-xs text-slate-400 block mt-0.5">{zone.section}</span>
                     </div>
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${details.badge}`}>
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${details.badge}`}>
                       {details.level}
                     </span>
                   </div>
@@ -459,9 +465,9 @@ export default function DashboardPage() {
 
                 {/* Progress bar */}
                 <div className="mt-6 space-y-1.5">
-                  <div className="h-2 w-full rounded-full bg-zinc-950 overflow-hidden">
+                  <div className="h-2 w-full rounded-full bg-navy-deep overflow-hidden">
                     <div 
-                      className={`h-full rounded-full transition-all duration-500 ${
+                      className={`h-full rounded-full transition-all duration-700 ${
                         ratio >= 0.9 ? 'bg-red-500' : ratio >= 0.7 ? 'bg-orange-500' : ratio >= 0.4 ? 'bg-amber-500' : 'bg-emerald-500'
                       }`}
                       style={{ width: `${percent}%` }}
@@ -481,7 +487,7 @@ export default function DashboardPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 bg-zinc-950 py-6 mt-16 text-center text-xs text-slate-500">
+      <footer className="border-t border-navy-border bg-navy-deep/85 py-6 mt-16 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 FIFA World Cup ArenaIQ. Real-time operations dashboard.</p>
           <div className="flex items-center space-x-2 text-emerald-400">

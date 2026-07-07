@@ -74,16 +74,27 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-radial from-slate-900 to-zinc-950 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-slate-800 bg-slate-950/50 p-8 shadow-2xl backdrop-blur-md">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-radial from-[#12192c] via-[#0a0f1e] to-black px-4 py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+      
+      {/* Decorative Outer Layout Accents */}
+      <div className="absolute top-10 left-10 w-24 h-24 border-t-2 border-l-2 border-navy-border/50 pointer-events-none hidden md:block"></div>
+      <div className="absolute bottom-10 right-10 w-24 h-24 border-b-2 border-r-2 border-navy-border/50 pointer-events-none hidden md:block"></div>
+
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl relative">
+        
+        {/* FIFA-inspired Decorative Bracket Corners on Login Card */}
+        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-gold/40 rounded-tl-xl pointer-events-none" />
+        <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-gold/40 rounded-tr-xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-gold/40 rounded-bl-xl pointer-events-none" />
+        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-gold/40 rounded-br-xl pointer-events-none" />
 
         {/* Header */}
         <div className="flex flex-col items-center space-y-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-500 shadow-[0_0_24px_rgba(16,185,129,0.4)]">
-            <Shield className="h-7 w-7 text-white" aria-hidden="true" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_24px_rgba(255,215,0,0.3)]">
+            <Shield className="h-7 w-7 text-navy-deep" aria-hidden="true" />
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Arena<span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">IQ</span>
+          <h1 className="text-3xl font-extrabold tracking-tight text-white" style={{ fontWeight: 900, letterSpacing: '-0.04em' }}>
+            Arena<span className="text-gold">AI</span>
           </h1>
           <p className="text-center text-sm text-slate-400">
             FIFA World Cup 2026™ Operations Command Center
@@ -111,11 +122,11 @@ export default function LoginPage() {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
-          className="group flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 bg-slate-900 py-3 px-4 text-sm font-semibold text-white transition-all duration-200 hover:border-slate-500 hover:bg-slate-800 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-50"
+          className="group flex w-full items-center justify-center gap-3 rounded-xl border border-navy-border bg-navy-card/65 py-3 px-4 text-sm font-semibold text-white transition-all duration-200 hover:border-gold hover:bg-navy-card hover:shadow-[0_0_20px_rgba(255,215,0,0.1)] focus:outline-none focus:ring-2 focus:ring-gold disabled:cursor-not-allowed disabled:opacity-50"
           aria-label="Sign in with Google"
         >
           {googleLoading ? (
-            <Loader2 className="h-5 w-5 animate-spin text-emerald-400" />
+            <Loader2 className="h-5 w-5 animate-spin text-gold" />
           ) : (
             /* Google SVG logo */
             <svg className="h-5 w-5 shrink-0" viewBox="0 0 24 24" aria-hidden="true">
@@ -142,11 +153,11 @@ export default function LoginPage() {
 
         {/* Divider */}
         <div className="relative flex items-center" role="separator">
-          <div className="flex-grow border-t border-slate-800" />
-          <span className="mx-3 shrink-0 text-xs font-medium uppercase tracking-wider text-slate-500">
+          <div className="flex-grow border-t border-navy-border" />
+          <span className="mx-3 shrink-0 text-xs font-semibold uppercase tracking-wider text-slate-500">
             or sign in with email
           </span>
-          <div className="flex-grow border-t border-slate-800" />
+          <div className="flex-grow border-t border-navy-border" />
         </div>
 
         {/* Email / Password Form */}
@@ -168,7 +179,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="block w-full rounded-lg border border-slate-800 bg-slate-900/50 py-2.5 pl-10 pr-3 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm transition-colors"
+                  className="block w-full rounded-lg border border-navy-border bg-navy-deep/50 py-2.5 pl-10 pr-3 text-white placeholder-slate-500 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold sm:text-sm transition-colors"
                   placeholder="name@arenaaiq.fifa.org"
                 />
               </div>
@@ -190,7 +201,7 @@ export default function LoginPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full rounded-lg border border-slate-800 bg-slate-900/50 py-2.5 pl-10 pr-3 text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm transition-colors"
+                  className="block w-full rounded-lg border border-navy-border bg-navy-deep/50 py-2.5 pl-10 pr-3 text-white placeholder-slate-500 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold sm:text-sm transition-colors"
                   placeholder="••••••••"
                 />
               </div>
@@ -205,7 +216,7 @@ export default function LoginPage() {
                 setError(null)
                 setSuccessMsg(null)
               }}
-              className="text-xs font-semibold text-slate-400 hover:text-emerald-400 focus:outline-none transition-colors"
+              className="text-xs font-semibold text-slate-400 hover:text-gold focus:outline-none transition-colors"
             >
               {isSignUp ? 'Already registered? Sign In' : 'Need credentials? Request Access'}
             </button>
@@ -215,7 +226,7 @@ export default function LoginPage() {
             id="email-auth-submit-btn"
             type="submit"
             disabled={loading || googleLoading}
-            className="group relative flex w-full justify-center rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 py-3 px-4 text-sm font-semibold text-white shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:from-emerald-400 hover:to-teal-400 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)] focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:opacity-50 transition-all duration-200"
+            className="group relative flex w-full justify-center rounded-xl bg-gold py-3 px-4 text-sm font-bold text-navy-deep shadow-[0_0_20px_rgba(255,215,0,0.25)] hover:bg-yellow-400 hover:shadow-[0_0_30px_rgba(255,215,0,0.4)] focus:outline-none focus:ring-2 focus:ring-gold disabled:opacity-50 transition-all duration-200"
           >
             {loading ? (
               <Loader2 className="h-5 w-5 animate-spin" />
@@ -228,7 +239,7 @@ export default function LoginPage() {
         </form>
 
         {/* Footer */}
-        <div className="border-t border-slate-800 pt-5 text-center text-xs text-slate-500">
+        <div className="border-t border-navy-border pt-5 text-center text-xs text-slate-500">
           <p>Authorized personnel only · Activities audited · WCAG 2.1 AA</p>
         </div>
       </div>

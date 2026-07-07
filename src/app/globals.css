@@ -1,26 +1,96 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0f1e;
+  --foreground: #f8fafc;
+  --color-gold: #FFD700;
+  --color-electric-blue: #00A8E8;
+  --color-navy-deep: #0a0f1e;
+  --color-navy-card: #12192c;
+  --color-navy-border: #1e294b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-gold: var(--color-gold);
+  --color-electric-blue: var(--color-electric-blue);
+  --color-navy-deep: var(--color-navy-deep);
+  --color-navy-card: var(--color-navy-card);
+  --color-navy-border: var(--color-navy-border);
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Control room animated grid and scanline background */
+.stadium-grid {
+  position: relative;
+}
+
+.stadium-grid::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: 
+    linear-gradient(rgba(30, 41, 75, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 41, 75, 0.4) 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: center;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.stadium-grid::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(
+    rgba(18, 25, 44, 0) 50%, 
+    rgba(0, 168, 232, 0.04) 50%
+  );
+  background-size: 100% 4px;
+  z-index: -1;
+  pointer-events: none;
+  animation: scanline 30s linear infinite;
+}
+
+@keyframes scanline {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 100%;
+  }
+}
+
+/* Ticker Animation */
+@keyframes ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-ticker {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+
+.animate-ticker:hover {
+  animation-play-state: paused;
 }
