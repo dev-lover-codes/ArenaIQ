@@ -55,7 +55,15 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 * Status updater tool to update zone states (`open`/`crowded`/`closed`).
 * Priority broadcast module to send alerts dynamically to all active dashboards.
 
-### 5. Tests & Quality Assurance
+### 5. Supabase Live Connection & Google OAuth (Phase 5)
+* **Project Name**: `ArenaIQ` on Supabase
+* Login page updated with Google Sign-In button (brand-accurate SVG logo, loading state)
+* `supabase.auth.signInWithOAuth({ provider: 'google' })` wired with `redirectTo: /auth/callback`
+* All Supabase client/server/middleware files already use `@supabase/ssr` correctly
+* Auth callback (`/auth/callback/route.ts`) handles `exchangeCodeForSession` for both email and OAuth flows
+* Setup guide created for: Supabase project creation, API key extraction, Google Cloud OAuth credentials, Supabase provider configuration, and site URL configuration
+
+### 6. Tests & Quality Assurance
 * Built Vitest tests for utility functions, custom UI primitives (Button, Input), components (NavigationForm, ChatInterface), and route handlers.
 * **Result**: 13 passed tests out of 13.
 * **ESLint check**: 100% clean check (0 warnings, 0 errors).
