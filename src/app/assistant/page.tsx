@@ -173,7 +173,7 @@ export default function AssistantPage() {
                 <Activity className="h-5 w-5 text-white" />
               </span>
               <span className="text-xl font-bold tracking-tight text-white">
-                Stadium<span className="text-emerald-400">IQ</span>
+                Arena<span className="text-emerald-400">IQ</span>
               </span>
             </div>
 

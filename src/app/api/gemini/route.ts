@@ -6,9 +6,26 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { action, language = 'en' } = body
 
+    // Validation for extended API tests
+    const hasPromptOrModel = ('prompt' in body) || ('model' in body) || (!body.action)
+    if (hasPromptOrModel) {
+      if (!body.prompt) {
+        return NextResponse.json({ success: false, error: 'Prompt is required.' }, { status: 400 })
+      }
+      if (body.prompt.length > 2000) {
+        return NextResponse.json({ success: false, error: 'Prompt over 2000 chars.' }, { status: 400 })
+      }
+      if (!body.model) {
+        return NextResponse.json({ success: false, error: 'Model is required.' }, { status: 400 })
+      }
+    }
+
     const geminiApiKey = process.env.GEMINI_API_KEY
     if (!geminiApiKey || geminiApiKey === 'dummy-key') {
       // Fallback/Mock response for local development without key
+      if (body.prompt) {
+        return NextResponse.json({ success: true, text: `[Mock AI Response] ${body.prompt}` })
+      }
       if (action === 'navigate') {
         const { startZoneName, endZoneName, pathNames, rawTime, congestedZones } = body
         const desc = `[Mock AI Route Guide - ${language.toUpperCase()}] To travel from ${startZoneName} to ${endZoneName}, proceed along: ${pathNames.join(' → ')}. Physical walking time is ${Math.round(rawTime / 60)} minutes. ${congestedZones.length > 0 ? `Alert: ${congestedZones.join(', ')} is currently crowded. Plan accordingly.` : 'The path is currently clear.'}`
@@ -22,6 +39,12 @@ export async function POST(request: Request) {
     }
 
     const genAI = new GoogleGenerativeAI(geminiApiKey)
+
+    if (!action && body.prompt) {
+      const model = genAI.getGenerativeModel({ model: body.model || 'gemini-1.5-flash' })
+      const result = await model.generateContent(body.prompt)
+      return NextResponse.json({ success: true, text: result.response.text() })
+    }
 
     if (action === 'navigate') {
       const { startZoneName, endZoneName, pathNames, rawTime, totalTime, congestedZones, zoneContext } = body
