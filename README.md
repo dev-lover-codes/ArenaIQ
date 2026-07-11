@@ -72,3 +72,44 @@ npm run test
 ```bash
 npm run build
 ```
+
+---
+
+## 📂 Testing with Custom Data
+
+Judges can test ArenaIQ's routing and crowd management engine with custom stadium data by uploading a JSON file to the `/api/simulate-crowd` endpoint with the following format:
+
+```json
+{
+  "zones": [
+    {
+      "id": "uuid-here",
+      "name": "Gate A",
+      "current_occupancy": 8500,
+      "capacity": 10000,
+      "status": "crowded"
+    }
+  ]
+}
+```
+
+This allows testing with any venue layout. The Dijkstra routing engine will automatically weight crowded zones (3× penalty) and exclude closed zones from all path calculations. The Gemini AI layer will then generate step-by-step navigation guidance based on the submitted graph.
+
+**Supported data formats:** JSON (via API body) — CSV support can be added by pre-processing with a CSV-to-JSON converter before POSTing to the endpoint.
+
+---
+
+## 📣 LinkedIn Post Draft
+
+> 🏟️ Just built ArenaIQ for #PromptWars Challenge 4 — a GenAI-powered FIFA World Cup 2026 smart stadium platform.
+>
+> Key prompt engineering decisions:
+> ✅ Dijkstra algorithm computes routes — Gemini only explains them (AI can't hallucinate paths)
+> ✅ JSON-forced output with few-shot examples for machine-readable AI responses
+> ✅ System instructions restrict Gemini to stadium domain only
+> ✅ Urgency detection in chat (medical emergency vs casual query)
+> ✅ Wheelchair/step-free routing as accessibility edge case
+>
+> Stack: Next.js 14, Supabase Realtime, Gemini 1.5 Flash
+>
+> #Hack2Skill #GenAI #FIFA2026 #VibeCoding
