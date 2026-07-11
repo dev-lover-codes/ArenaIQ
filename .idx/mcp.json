@@ -26,17 +26,17 @@
         "@supabase/mcp-server-supabase@latest"
       ],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "YOUR_SUPABASE_ACCESS_TOKEN_HERE"
+        "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
       }
     },
     "vercel": {
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-vercel@latest"
+        "vercel-mcp-pro@latest"
       ],
       "env": {
-        "VERCEL_ACCESS_TOKEN": "YOUR_VERCEL_ACCESS_TOKEN_HERE"
+        "VERCEL_TOKEN": "${VERCEL_TOKEN}"
       }
     },
     "21st-dev": {

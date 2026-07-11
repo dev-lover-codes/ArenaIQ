@@ -79,3 +79,7 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 * **Glassmorphism**: Login card redesigned with `bg-white/5 backdrop-blur-xl` and gold tactical corner borders.
 * **Favicon**: Added explicit favicon settings directly in metadata within root `layout.tsx`.
 
+### 8. MCP Connection Status Check
+* **Supabase MCP Status**: Configured in `.idx/mcp.json` but **not fully connected**. The command runs successfully, but returns `Unauthorized` because the access token is set to the placeholder `YOUR_SUPABASE_ACCESS_TOKEN_HERE`.
+* **Vercel MCP Status**: Configured in `.idx/mcp.json` but **not connected**. The command fails to run because `@modelcontextprotocol/server-vercel@latest` does not exist in the npm registry (returns 404), and the access token is set to the placeholder `YOUR_VERCEL_ACCESS_TOKEN_HERE`.
+* **Resolution Plan**: The user must supply a valid `SUPABASE_ACCESS_TOKEN` and `VERCEL_ACCESS_TOKEN`, and the Vercel MCP configuration should be updated to point to a valid Vercel MCP server package or the official endpoint.
