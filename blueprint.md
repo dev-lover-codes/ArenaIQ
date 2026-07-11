@@ -79,7 +79,48 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 * **Glassmorphism**: Login card redesigned with `bg-white/5 backdrop-blur-xl` and gold tactical corner borders.
 * **Favicon**: Added explicit favicon settings directly in metadata within root `layout.tsx`.
 
-### 8. MCP Connection Status Check
-* **Supabase MCP Status**: Configured in `.idx/mcp.json` but **not fully connected**. The command runs successfully, but returns `Unauthorized` because the access token is set to the placeholder `YOUR_SUPABASE_ACCESS_TOKEN_HERE`.
-* **Vercel MCP Status**: Configured in `.idx/mcp.json` but **not connected**. The command fails to run because `@modelcontextprotocol/server-vercel@latest` does not exist in the npm registry (returns 404), and the access token is set to the placeholder `YOUR_VERCEL_ACCESS_TOKEN_HERE`.
-* **Resolution Plan**: The user must supply a valid `SUPABASE_ACCESS_TOKEN` and `VERCEL_ACCESS_TOKEN`, and the Vercel MCP configuration should be updated to point to a valid Vercel MCP server package or the official endpoint.
+### 8. MCP Connection Status & Next.js Middleware Fix
+* **Supabase MCP**: Successfully configured and connected in `.idx/mcp.json` using the provided token.
+* **Vercel MCP**: Switched to `vercel-mcp-pro@latest` and configured with the provided token; successfully verified connection and listed projects.
+* **Next.js Middleware Fix**:
+  * Deleted `src/proxy.ts` and created `src/middleware.ts` running `updateSession` on incoming requests.
+  * Confirmed that redirect logic in `src/lib/supabase/middleware.ts` correctly handles unauthenticated users trying to access `/dashboard` or `/staff` by sending them to `/login`.
+  * Built the project successfully with zero errors under Next.js 16 (which notes deprecation of `middleware` in favor of `proxy` but maintains compatibility, compiling it as `ƒ Proxy (Middleware)`).
+
+### 9. PromptWars Evaluation Upgrades
+* **JSON-Formatted Output & Explainable AI (XAI)**:
+  * Updated `/api/gemini` routing to request navigation data formatted strictly as JSON.
+  * Configured Gemini SDK using `responseMimeType: "application/json"`.
+  * Embedded JSON-RPC few-shot examples in the prompt body containing detailed path steps, estimated minutes, congestion warnings, accessibility notes, and explicit AI reasoning (`ai_reasoning`).
+* **Frontend JSON Integration**:
+  * Updated `src/app/navigate/page.tsx` to parse the JSON explanation.
+  * Added conditional rendering for `congestion_warning` in a styled red alert banner.
+  * Implemented a prominent teal callout card displaying the `accessibility_note` for wheelchair users.
+  * Rendered the steps as a clean numbered list and placed `ai_reasoning` inside an interactive, collapsible `<details>` section ("Why this route?").
+* **Few-shot Chat Context**:
+  * Added behavior few-shot examples to the chat agent's system instruction, instructing it on directness, urgency detection (incorporating medical station locations), language switching, and tone.
+
+### 10. Wheelchair Routing & Expanded Test Suite
+* **Accessibility DB Migration** (`supabase/migrations/20260707_accessibility.sql`):
+  * Added `has_elevator boolean DEFAULT false` to `zones`.
+  * Added `is_step_free boolean DEFAULT true` to `zone_edges`.
+  * Auto-populated elevators for all zones matching `%gate%` or `%concourse%`.
+* **Routing Engine** (`src/lib/routing.ts`):
+  * Extended `Zone` interface with `has_elevator?: boolean`.
+  * Extended `Edge` interface with `is_step_free?: boolean`.
+  * Added `wheelchairMode: boolean = false` parameter to `calculateRoute`.
+  * When `wheelchairMode=true`, edges with `is_step_free === false` are skipped entirely from the adjacency list — forcing the algorithm to find a fully accessible path or return `null`.
+* **Navigate API** (`src/app/api/navigate/route.ts`):
+  * Destructures `wheelchairMode` from the request body.
+  * Fetches `has_elevator` and `is_step_free` from Supabase.
+  * Passes `wheelchairMode` through to `calculateRoute`.
+* **Navigate Frontend** (`src/app/navigate/page.tsx`):
+  * Added `wheelchairMode` state variable.
+  * Rendered a ♿ Wheelchair / Step-free route checkbox toggle in the form.
+  * Passes `wheelchairMode` flag in the API request body.
+* **Test Suite Expansion** — **98 tests, 10 test files, all green**:
+  * `routing.extended.test.ts` rewritten: 20 tests covering all edge cases (start/end non-existent, closed zones, same-node path, crowded avoidance/forced-use, congestedZones accuracy, rawTime≤totalTime invariant, disconnected graph, path integrity, and all wheelchair mode scenarios).
+  * `utils.extended.test.ts` rewritten: 27 tests covering every branch of `cn()`, `formatOccupancy()`, and `getDensityLevel()`.
+  * `api.test.ts` created (new): 13 targeted API validation tests covering missing/invalid inputs for all four API routes with full Supabase + Gemini mocks.
+
+

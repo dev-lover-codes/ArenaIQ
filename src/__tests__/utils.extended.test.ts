@@ -1,71 +1,126 @@
 import { expect, test, describe } from 'vitest'
 import { cn, formatOccupancy, getDensityLevel } from '../lib/utils'
 
-describe('Utility Functions - Extended', () => {
+describe('Utility Functions — comprehensive', () => {
+
+  // ─── cn() ───────────────────────────────────────────────────────────────────
+
   describe('cn()', () => {
-    test('merges class names correctly', () => {
+    test('returns empty string when called with no args', () => {
+      expect(cn()).toBe('')
+    })
+
+    test('merges two class strings', () => {
+      expect(cn('text-white', 'font-bold')).toBe('text-white font-bold')
+    })
+
+    test('deduplicates conflicting Tailwind classes (last wins)', () => {
       expect(cn('bg-red-500', 'bg-blue-500')).toBe('bg-blue-500')
-      expect(cn('text-white font-bold', 'text-black')).toBe('font-bold text-black')
+    })
+
+    test('deduplicates padding conflicts (shorthand wins)', () => {
       expect(cn('px-2 py-1', 'p-4')).toBe('p-4')
     })
 
-    test('handles undefined/null/false values', () => {
-      expect(cn('bg-red-500', undefined, null, false, 'text-white')).toBe('bg-red-500 text-white')
+    test('handles undefined values gracefully', () => {
+      expect(cn('text-white', undefined, 'font-bold')).toBe('text-white font-bold')
     })
 
-    test('handles conditional classes', () => {
-      const isTrue = true
-      const isFalse = false
-      expect(cn('font-bold', isTrue && 'text-green-500', isFalse && 'text-red-500')).toBe('font-bold text-green-500')
+    test('handles conditional false values gracefully', () => {
+      expect(cn('text-white', false, 'font-bold')).toBe('text-white font-bold')
+    })
+
+    test('handles null values gracefully', () => {
+      expect(cn('text-white', null, 'font-bold')).toBe('text-white font-bold')
+    })
+
+    test('handles conditional true expression', () => {
+      const show = true
+      expect(cn('base', show && 'extra')).toBe('base extra')
+    })
+
+    test('handles conditional false expression (class omitted)', () => {
+      const show = false
+      expect(cn('base', show && 'extra')).toBe('base')
     })
   })
 
+  // ─── formatOccupancy() ──────────────────────────────────────────────────────
+
   describe('formatOccupancy()', () => {
-    test('formats percentage correctly with capacity', () => {
-      expect(formatOccupancy(50, 100)).toBe('50%')
-      expect(formatOccupancy(0, 100)).toBe('0%')
-      expect(formatOccupancy(120, 100)).toBe('120%')
+    test('returns plain number string when capacity is undefined', () => {
+      expect(formatOccupancy(500)).toBe('500')
     })
 
-    test('formats numbers with commas when capacity is undefined', () => {
+    test('returns comma-formatted number without capacity', () => {
       expect(formatOccupancy(1000)).toBe('1,000')
+    })
+
+    test('returns percentage string with capacity', () => {
+      expect(formatOccupancy(50, 100)).toBe('50%')
+    })
+
+    test('returns 0% when capacity is zero', () => {
+      expect(formatOccupancy(0, 0)).toBe('0%')
+    })
+
+    test('handles negative capacity gracefully (treated as zero)', () => {
+      expect(formatOccupancy(50, -1)).toBe('0%')
+    })
+
+    test('handles large numbers without capacity', () => {
       expect(formatOccupancy(1234567)).toBe('1,234,567')
     })
 
-    test('handles 0', () => {
+    test('returns 0 string when occupancy is 0 without capacity', () => {
       expect(formatOccupancy(0)).toBe('0')
     })
 
-    test('handles large numbers (100000+)', () => {
-      expect(formatOccupancy(500000)).toBe('500,000')
-      expect(formatOccupancy(100000)).toBe('100,000')
+    test('handles over-capacity percentage (>100%)', () => {
+      expect(formatOccupancy(150, 100)).toBe('150%')
+    })
+
+    test('rounds to nearest integer percentage', () => {
+      expect(formatOccupancy(1, 3)).toBe('33%')
     })
   })
 
+  // ─── getDensityLevel() ──────────────────────────────────────────────────────
+
   describe('getDensityLevel()', () => {
-    test("returns 'low' for ratio < 0.4", () => {
+    test("returns 'low' for 0", () => {
       expect(getDensityLevel(0)).toBe('low')
+    })
+
+    test("returns 'low' for 0.39", () => {
       expect(getDensityLevel(0.39)).toBe('low')
     })
 
-    test("returns 'medium' for ratio 0.4-0.69", () => {
+    test("returns 'medium' for 0.4 (boundary)", () => {
       expect(getDensityLevel(0.4)).toBe('medium')
+    })
+
+    test("returns 'medium' for 0.69", () => {
       expect(getDensityLevel(0.69)).toBe('medium')
     })
 
-    test("returns 'high' for ratio 0.7-0.89", () => {
+    test("returns 'high' for 0.7 (boundary)", () => {
       expect(getDensityLevel(0.7)).toBe('high')
+    })
+
+    test("returns 'high' for 0.89", () => {
       expect(getDensityLevel(0.89)).toBe('high')
     })
 
-    test("returns 'critical' for ratio >= 0.9", () => {
+    test("returns 'critical' for 0.9 (boundary)", () => {
       expect(getDensityLevel(0.9)).toBe('critical')
-      expect(getDensityLevel(0.95)).toBe('critical')
     })
 
-    test('handles edge cases (0, 1, >1)', () => {
-      expect(getDensityLevel(0)).toBe('low')
-      expect(getDensityLevel(1)).toBe('critical')
+    test("returns 'critical' for 1.0", () => {
+      expect(getDensityLevel(1.0)).toBe('critical')
+    })
+
+    test("returns 'critical' for values > 1 (over-capacity)", () => {
       expect(getDensityLevel(1.5)).toBe('critical')
     })
   })

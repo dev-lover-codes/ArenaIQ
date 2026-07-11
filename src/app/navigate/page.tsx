@@ -33,6 +33,15 @@ interface RouteResponse {
   error?: string
 }
 
+interface ParsedExplanation {
+  steps: string[]
+  estimated_minutes: number
+  congestion_warning: string | null
+  urgency: string
+  accessibility_note: string
+  ai_reasoning: string
+}
+
 const LANGUAGES = [
   { code: 'en', name: 'English' },
   { code: 'es', name: 'Español (Spanish)' },
@@ -52,6 +61,7 @@ export default function NavigatePage() {
   const [endZone, setEndZone] = useState('')
   const [language, setLanguage] = useState('en')
   
+  const [wheelchairMode, setWheelchairMode] = useState(false)
   const [calculating, setCalculating] = useState(false)
   const [routeResult, setRouteResult] = useState<RouteResponse | null>(null)
   const [liveNavAnnouncement, setLiveNavAnnouncement] = useState('')
@@ -88,7 +98,8 @@ export default function NavigatePage() {
         body: JSON.stringify({
           startZone,
           endZone,
-          language
+          language,
+          wheelchairMode
         })
       })
 
@@ -106,6 +117,15 @@ export default function NavigatePage() {
       setLiveNavAnnouncement('Error calculating route.')
     } finally {
       setCalculating(false)
+    }
+  }
+
+  let parsedExplanation: ParsedExplanation | null = null
+  if (routeResult && routeResult.success && routeResult.explanation) {
+    try {
+      parsedExplanation = JSON.parse(routeResult.explanation)
+    } catch (e) {
+      console.error('Failed to parse explanation JSON', e)
     }
   }
 
@@ -251,6 +271,19 @@ export default function NavigatePage() {
                   </select>
                 </div>
 
+                {/* Wheelchair toggle */}
+                <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    id="wheelchair-mode-toggle"
+                    checked={wheelchairMode}
+                    onChange={e => setWheelchairMode(e.target.checked)}
+                    aria-label="Enable wheelchair accessible route"
+                    className="h-4 w-4 rounded border-zinc-700 bg-zinc-950 accent-emerald-500"
+                  />
+                  ♿ Wheelchair / Step-free route
+                </label>
+
                 <button
                   type="submit"
                   disabled={calculating || !startZone || !endZone}
@@ -343,9 +376,64 @@ export default function NavigatePage() {
                     <h3 className="text-md text-white">GenAI Direction Explanation</h3>
                   </div>
 
-                  <p className="text-slate-300 leading-relaxed text-md whitespace-pre-line">
-                    {routeResult.explanation}
-                  </p>
+                  {parsedExplanation ? (
+                    <div className="space-y-4">
+                      {/* Congestion warning in a red alert box */}
+                      {parsedExplanation.congestion_warning && (
+                        <div className="border border-red-500/30 bg-red-500/10 p-4 rounded-xl text-red-400 flex items-start gap-2.5" role="alert">
+                          <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-white text-sm">Congestion Warning</h4>
+                            <p className="text-sm mt-0.5">{parsedExplanation.congestion_warning}</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Accessibility note prominently for wheelchair users */}
+                      {parsedExplanation.accessibility_note && (
+                        <div className="border border-teal-500/30 bg-teal-500/10 p-4 rounded-xl text-teal-400 flex items-start gap-2.5">
+                          <Accessibility className="h-5 w-5 shrink-0 mt-0.5" />
+                          <div>
+                            <h4 className="font-bold text-white text-sm">Accessibility Info</h4>
+                            <p className="text-sm mt-0.5">{parsedExplanation.accessibility_note}</p>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Steps as a numbered list */}
+                      <div>
+                        <h4 className="font-bold text-white text-sm mb-2">Step-by-Step Directions</h4>
+                        <ol className="list-decimal pl-5 space-y-1.5 text-sm text-slate-300">
+                          {parsedExplanation.steps?.map((step: string, idx: number) => (
+                            <li key={idx} className="pl-1">{step}</li>
+                          ))}
+                        </ol>
+                      </div>
+
+                      {/* Estimated walk time summary */}
+                      {parsedExplanation.estimated_minutes && (
+                        <p className="text-sm text-slate-400">
+                          Estimated time: <span className="text-white font-semibold">{parsedExplanation.estimated_minutes} minutes</span>
+                        </p>
+                      )}
+
+                      {/* AI reasoning in a collapsible "Why this route?" section */}
+                      {parsedExplanation.ai_reasoning && (
+                        <details className="mt-4 border border-zinc-800 rounded-lg bg-zinc-950/40">
+                          <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white select-none focus:outline-hidden">
+                            Why this route?
+                          </summary>
+                          <div className="px-4 pb-4 pt-2 text-sm text-slate-400 border-t border-zinc-800/40 leading-relaxed">
+                            {parsedExplanation.ai_reasoning}
+                          </div>
+                        </details>
+                      )}
+                    </div>
+                  ) : (
+                    <p className="text-slate-300 leading-relaxed text-md whitespace-pre-line">
+                      {routeResult.explanation}
+                    </p>
+                  )}
 
                   <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-slate-500">
                     Explanation compiled server-side via Gemini API. Paths computed algorithmically to prevent hallucinations.

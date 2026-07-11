@@ -2,6 +2,7 @@ export interface Edge {
   zone_a_id: string
   zone_b_id: string
   walk_time_seconds: number
+  is_step_free?: boolean
 }
 
 export interface Zone {
@@ -10,6 +11,7 @@ export interface Zone {
   status: 'open' | 'crowded' | 'closed'
   capacity?: number
   current_occupancy?: number
+  has_elevator?: boolean
 }
 
 export interface RouteResult {
@@ -22,12 +24,14 @@ export interface RouteResult {
 /**
  * Computes the optimal path between two zones using Dijkstra's algorithm.
  * Accounts for crowded zones by applying a traversal penalty, and avoids closed zones.
+ * When wheelchairMode is true, edges where is_step_free === false are skipped entirely.
  */
 export function calculateRoute(
   zones: Zone[],
   edges: Edge[],
   startId: string,
-  endId: string
+  endId: string,
+  wheelchairMode: boolean = false
 ): RouteResult | null {
   // Create mapping of zone ID to status
   const zoneMap = new Map<string, Zone>()
@@ -54,6 +58,12 @@ export function calculateRoute(
 
     // Skip edge if either zone is closed or doesn't exist
     if (!fromZone || !toZone || fromZone.status === 'closed' || toZone.status === 'closed') {
+      return
+    }
+
+    // In wheelchair mode, skip edges that are not step-free
+    // is_step_free defaults to true if not specified (backward compatible)
+    if (wheelchairMode && edge.is_step_free === false) {
       return
     }
 

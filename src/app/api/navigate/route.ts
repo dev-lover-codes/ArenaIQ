@@ -16,7 +16,7 @@ function createAdminClient() {
 
 export async function POST(request: Request) {
   try {
-    const { startZone, endZone, language = 'en' } = await request.json()
+    const { startZone, endZone, language = 'en', wheelchairMode = false } = await request.json()
 
     if (!startZone || !endZone) {
       return NextResponse.json({ success: false, error: 'Start and destination zones are required.' }, { status: 400 })
@@ -26,8 +26,8 @@ export async function POST(request: Request) {
 
     // 1. Fetch zones and edges
     const [zonesRes, edgesRes] = await Promise.all([
-      supabase.from('zones').select('id, name, status, capacity, current_occupancy'),
-      supabase.from('zone_edges').select('zone_a_id, zone_b_id, walk_time_seconds')
+      supabase.from('zones').select('id, name, status, capacity, current_occupancy, has_elevator'),
+      supabase.from('zone_edges').select('zone_a_id, zone_b_id, walk_time_seconds, is_step_free')
     ])
 
     if (zonesRes.error) throw zonesRes.error
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     const edges: Edge[] = edgesRes.data || []
 
     // 2. Calculate route using Dijkstra
-    const route = calculateRoute(zones, edges, startZone, endZone)
+    const route = calculateRoute(zones, edges, startZone, endZone, wheelchairMode)
 
     if (!route) {
       return NextResponse.json({ 
