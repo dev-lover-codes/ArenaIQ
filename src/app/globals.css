@@ -3,7 +3,11 @@
 :root {
   --background: #0a0f1e;
   --foreground: #f8fafc;
-  --color-gold: #FFD700;
+  --navy: #0a0f1e;
+  --gold: #f5c518;
+  --electric-blue: #00a8e8;
+  --surface: #111827;
+  --color-gold: #f5c518;
   --color-electric-blue: #00A8E8;
   --color-navy-deep: #0a0f1e;
   --color-navy-card: #12192c;
@@ -93,4 +97,15 @@ body {
 
 .animate-ticker:hover {
   animation-play-state: paused;
+}
+
+/* Scanline overlay utility */
+.scanline-bg {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.015) 2px,
+    rgba(255, 255, 255, 0.015) 4px
+  );
 }

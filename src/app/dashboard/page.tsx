@@ -285,9 +285,9 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-3" style={{ fontWeight: 900, letterSpacing: '-0.04em' }}>
               Crowd Density Heatmap
-              <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-xs font-black bg-red-600/90 text-white animate-pulse border border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)]">
-                <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping"></span>
-                <span>LIVE CONTROL</span>
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-red-400 bg-red-950/30 border border-red-500/30 rounded-full px-2 py-0.5 ml-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-ping" />
+                LIVE
               </span>
             </h1>
             <p className="mt-1 text-slate-400">
@@ -350,7 +350,7 @@ export default function DashboardPage() {
               
               <div className="mt-4 p-4 rounded-xl bg-navy-deep/80 border border-navy-border flex items-center justify-between shadow-inner">
                 <span className="text-xl sm:text-2xl font-black tracking-wider uppercase text-white">Mexico</span>
-                <span className="text-3xl sm:text-4xl font-black tracking-widest text-gold font-mono bg-black/60 px-4 py-1.5 rounded-lg border border-navy-border shadow-inner">
+                <span className="text-3xl sm:text-4xl font-black tracking-widest font-mono bg-black/60 px-4 py-1.5 rounded-lg border border-navy-border shadow-inner" style={{ color: '#f5c518' }}>
                   2 - 1
                 </span>
                 <span className="text-xl sm:text-2xl font-black tracking-wider uppercase text-white">USA</span>

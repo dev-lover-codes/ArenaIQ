@@ -47,8 +47,8 @@ export default function Home() {
           
           <h1 className="text-4xl sm:text-6xl font-extrabold text-white tracking-tight leading-none" style={{ fontWeight: 900, letterSpacing: '-0.04em' }}>
             Intelligent Operations, <br className="hidden sm:inline" />
-            <span className="text-gold">
-              Elevated Tournament Experience
+            <span style={{ color: '#f5c518' }}>
+              FIFA World Cup 2026
             </span>
           </h1>
           
@@ -74,17 +74,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Live Stats Horizontal Scrolling Ticker */}
-      <div className="w-full overflow-hidden bg-navy-card/80 border-y border-navy-border py-4 shrink-0 shadow-inner">
+      <div role="marquee" aria-label="Tournament statistics" className="w-full overflow-hidden bg-navy-card/80 border-y border-navy-border py-4 shrink-0 shadow-inner">
         <div className="w-full overflow-hidden relative">
           <div className="animate-ticker flex items-center space-x-16 text-xs sm:text-sm font-bold tracking-widest text-slate-300 uppercase">
-            <span>48 Venues</span>
+            <span>🏟️ 16 Venues</span>
             <span className="text-gold">•</span>
-            <span>3 Host Nations</span>
+            <span>🌍 3 Host Nations</span>
             <span className="text-gold">•</span>
-            <span>104 Matches</span>
+            <span>⚽ 104 Matches</span>
             <span className="text-gold">•</span>
-            <span>5M+ Fans Live</span>
+            <span>♟ 5M+ Expected Fans</span>
             <span className="text-gold">•</span>
             <span>Estadio Azteca</span>
             <span className="text-gold">•</span>
@@ -92,13 +91,14 @@ export default function Home() {
             <span className="text-gold">•</span>
             <span>MetLife Stadium</span>
             <span className="text-gold">•</span>
-            <span>48 Venues</span>
+            {/* duplicate for seamless loop */}
+            <span>🏟️ 16 Venues</span>
             <span className="text-gold">•</span>
-            <span>3 Host Nations</span>
+            <span>🌍 3 Host Nations</span>
             <span className="text-gold">•</span>
-            <span>104 Matches</span>
+            <span>⚽ 104 Matches</span>
             <span className="text-gold">•</span>
-            <span>5M+ Fans Live</span>
+            <span>♟ 5M+ Expected Fans</span>
             <span className="text-gold">•</span>
             <span>Estadio Azteca</span>
             <span className="text-gold">•</span>
@@ -118,7 +118,7 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <div className="bg-navy-card/40 border border-navy-border p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:border-t-gold hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(255,215,0,0.1)]">
+            <div className="bg-navy-card/40 border border-navy-border p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:border-t-2 hover:border-yellow-400 hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(245,197,24,0.12)]">
               <span className="p-3 rounded-xl bg-gold/10 text-gold border border-gold/20">
                 <Map className="h-6 w-6" />
               </span>
@@ -128,7 +128,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-navy-card/40 border border-navy-border p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:border-t-gold hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(255,215,0,0.1)]">
+            <div className="bg-navy-card/40 border border-navy-border p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:border-t-2 hover:border-yellow-400 hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(245,197,24,0.12)]">
               <span className="p-3 rounded-xl bg-electric-blue/10 text-electric-blue border border-electric-blue/20">
                 <Users className="h-6 w-6" />
               </span>
@@ -138,7 +138,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-navy-card/40 border border-navy-border p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:border-t-gold hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(255,215,0,0.1)]">
+            <div className="bg-navy-card/40 border border-navy-border p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:border-t-2 hover:border-yellow-400 hover:-translate-y-1 hover:shadow-[0_4px_20px_rgba(245,197,24,0.12)]">
               <span className="p-3 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <Languages className="h-6 w-6" />
               </span>
