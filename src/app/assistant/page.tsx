@@ -8,7 +8,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { 
   Activity, 
-  Send, 
+  ArrowRight,
   Sparkles, 
   Trash2, 
   Accessibility, 
@@ -20,16 +20,21 @@ import {
 interface Message {
   role: 'user' | 'model'
   text: string
+  timestamp?: string
 }
 
 const LANGUAGES = [
-  { code: 'en', name: 'English' },
-  { code: 'es', name: 'Español (Spanish)' },
-  { code: 'fr', name: 'Français (French)' },
-  { code: 'ar', name: 'العربية (Arabic)' },
-  { code: 'pt', name: 'Português (Portuguese)' },
-  { code: 'hi', name: 'हिन्दी (Hindi)' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'es', name: 'Español (Spanish)', flag: '🇪🇸' },
+  { code: 'fr', name: 'Français (French)', flag: '🇫🇷' },
+  { code: 'ar', name: 'العربية (Arabic)', flag: '🇸🇦' },
+  { code: 'pt', name: 'Português (Portuguese)', flag: '🇧🇷' },
+  { code: 'hi', name: 'हिन्दी (Hindi)', flag: '🇮🇳' },
 ]
+
+function getTimestamp(): string {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+}
 
 export default function AssistantPage() {
   const router = useRouter()
@@ -63,7 +68,8 @@ export default function AssistantPage() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setMessages(dbMessages.map((m: any) => ({
           role: m.role,
-          text: m.parts?.[0]?.text || m.text || ''
+          text: m.parts?.[0]?.text || m.text || '',
+          timestamp: getTimestamp()
         })))
       }
     } catch {
@@ -105,7 +111,7 @@ export default function AssistantPage() {
     setInputMsg('')
     
     // Optimistic local state update
-    const updatedMessages = [...messages, { role: 'user' as const, text: userMessageText }]
+    const updatedMessages = [...messages, { role: 'user' as const, text: userMessageText, timestamp: getTimestamp() }]
     setMessages(updatedMessages)
     setSending(true)
     setLiveChatAnnouncement('Sending message to ArenaIQ assistant...')
@@ -125,7 +131,8 @@ export default function AssistantPage() {
 
       const data = await res.json()
       if (data.success) {
-        setMessages(data.messages)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setMessages(data.messages.map((m: any) => ({ ...m, timestamp: m.timestamp || getTimestamp() })))
         if (!sessionId && data.sessionId) {
           setSessionId(data.sessionId)
           if (user) {
@@ -134,11 +141,11 @@ export default function AssistantPage() {
         }
         setLiveChatAnnouncement('Reply received from assistant.')
       } else {
-        setMessages(prev => [...prev, { role: 'model', text: `System Error: ${data.error}` }])
+        setMessages(prev => [...prev, { role: 'model', text: `System Error: ${data.error}`, timestamp: getTimestamp() }])
         setLiveChatAnnouncement('Error sending message.')
       }
     } catch {
-      setMessages(prev => [...prev, { role: 'model', text: 'Network connection error. Please try again.' }])
+      setMessages(prev => [...prev, { role: 'model', text: 'Network connection error. Please try again.', timestamp: getTimestamp() }])
       setLiveChatAnnouncement('Error sending message.')
     } finally {
       setSending(false)
@@ -154,67 +161,75 @@ export default function AssistantPage() {
     setLiveChatAnnouncement('Chat session cleared.')
   }
 
+  const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0]
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-slate-100 font-sans flex flex-col">
+    <div className="min-h-screen bg-navy-deep text-slate-100 font-sans flex flex-col stadium-grid">
       
       {/* Screen Reader Live Announcements */}
       <div className="sr-only" aria-live="polite" aria-atomic="true">
         {liveChatAnnouncement}
       </div>
 
-      {/* Navigation Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-50 shrink-0">
+      {/* ── HEADER ─────────────────────────────────────── */}
+      <header className="border-b border-navy-border bg-navy-card/80 backdrop-blur-md sticky top-0 z-50 shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-500">
-                <Activity className="h-5 w-5 text-white" />
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_10px_rgba(255,215,0,0.3)]">
+                <Activity className="h-5 w-5 text-navy-deep" />
               </span>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Arena<span className="text-emerald-400">IQ</span>
-              </span>
+              <div>
+                <span className="text-xl font-bold tracking-tight text-white">
+                  Arena<span className="text-gold">IQ</span>
+                </span>
+                <span className="hidden sm:block text-[10px] font-black tracking-[0.18em] text-electric-blue uppercase">
+                  Command Center
+                </span>
+              </div>
             </div>
 
             {/* Navigation links */}
             <nav className="hidden md:flex space-x-1" aria-label="Main Navigation">
               <Link 
                 href="/dashboard" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
               >
                 Heatmap Dashboard
               </Link>
               <Link 
                 href="/navigate" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
               >
                 Smart Route Planner
               </Link>
               <Link 
                 href="/assistant" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold bg-zinc-800 text-emerald-400 border border-zinc-700"
+                className="px-3 py-2 rounded-lg text-sm font-semibold bg-navy-deep text-gold border border-navy-border"
                 aria-current="page"
               >
                 Multilingual AI Assistant
               </Link>
             </nav>
 
-            {/* Language Controls */}
+            {/* Language Controls — flag + selector inline */}
             <div className="flex items-center space-x-3">
-              <div className="relative">
+              <div className="flex items-center gap-2 border border-navy-border bg-navy-deep rounded-lg px-2 py-1.5">
+                <span className="text-lg">{selectedLang.flag}</span>
                 <label htmlFor="chat-lang" className="sr-only">Select Chat Language</label>
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-2 text-slate-400">
-                  <Languages className="h-4 w-4" />
+                <div className="pointer-events-none text-slate-400">
+                  <Languages className="h-3.5 w-3.5" />
                 </div>
                 <select
                   id="chat-lang"
                   value={language}
                   onChange={(e) => setLanguage(e.target.value)}
-                  className="rounded-lg border border-zinc-800 bg-zinc-900 py-1.5 pl-8 pr-2 text-xs font-semibold text-white focus:border-emerald-500 focus:outline-hidden"
+                  className="bg-transparent text-xs font-semibold text-white focus:outline-hidden"
                 >
                   {LANGUAGES.map((l) => (
-                    <option key={l.code} value={l.code}>{l.name}</option>
+                    <option key={l.code} value={l.code} className="bg-navy-deep">{l.flag} {l.name}</option>
                   ))}
                 </select>
               </div>
@@ -222,7 +237,7 @@ export default function AssistantPage() {
               {messages.length > 0 && (
                 <button
                   onClick={clearChat}
-                  className="p-2 rounded-lg border border-zinc-800 hover:bg-zinc-900 text-slate-400 hover:text-white transition"
+                  className="p-2 rounded-lg border border-navy-border hover:bg-navy-card text-slate-400 hover:text-white transition"
                   aria-label="Clear chat session history"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -235,39 +250,46 @@ export default function AssistantPage() {
       </header>
 
       {/* Main Chat Area */}
-      <main role="main" className="flex-1 max-w-5xl w-full mx-auto px-4 py-6 flex flex-col min-h-0">
+      <main role="main" className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 flex flex-col min-h-0">
         
-        {/* Top Info Banner */}
-        <section aria-label="Assistant Info" className="bg-zinc-900/30 border border-zinc-850 p-4 rounded-xl mb-4 shrink-0 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <span className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
-              <Sparkles className="h-5 w-5" />
-            </span>
-            <div>
-              <h1 className="text-sm font-bold text-white">ArenaIQ Smart Helper</h1>
-              <p className="text-xs text-slate-400">Ask about facilities, match schedules, seating maps, concessions, and transport guidelines.</p>
+        {/* ── ASSISTANT HEADER BANNER ──────────────────── */}
+        <section aria-label="Assistant Info" className="bg-navy-card/40 border border-navy-border p-4 rounded-xl mb-4 shrink-0">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <span className="p-2.5 rounded-xl bg-gold/10 border border-gold/20 text-gold">
+                <Sparkles className="h-5 w-5" />
+              </span>
+              <div>
+                <h1 className="text-sm font-black text-white tracking-wide">
+                  ArenaIQ <span className="text-gold">ASSISTANT</span>
+                </h1>
+                <p className="text-xs text-slate-400 mt-0.5">Ask about facilities, match schedules, seating maps, concessions, and transport guidelines.</p>
+              </div>
+            </div>
+            <div className="hidden sm:flex flex-col items-end gap-1">
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-gold/10 text-gold border border-gold/20 uppercase tracking-wider">
+                Gemini Powered
+              </span>
+              <span className="text-[10px] text-slate-500">{selectedLang.flag} {selectedLang.name}</span>
             </div>
           </div>
-          <span className="hidden sm:inline-block px-2 py-0.5 rounded-full text-[10px] font-bold bg-zinc-850 text-slate-400 uppercase tracking-wider">
-            Gemini Assisted
-          </span>
         </section>
 
-        {/* Chat Messages Panel */}
+        {/* ── CHAT MESSAGES ────────────────────────────── */}
         <section 
           aria-label="Chat messages history"
-          className="flex-1 bg-zinc-950 border border-zinc-800 rounded-2xl p-4 sm:p-6 overflow-y-auto space-y-4 shadow-inner"
+          className="flex-1 bg-navy-deep/60 border border-navy-border rounded-2xl p-4 sm:p-6 overflow-y-auto space-y-4 shadow-inner"
         >
           {loadingHistory ? (
             <div className="flex flex-col items-center justify-center h-full text-slate-500">
-              <Loader2 className="h-8 w-8 animate-spin text-emerald-500 mb-2" />
+              <Loader2 className="h-8 w-8 animate-spin text-gold mb-2" />
               <span className="text-sm">Retrieving conversation history...</span>
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-slate-500 max-w-sm mx-auto">
-              <Sparkles className="h-10 w-10 text-zinc-700 mb-3" />
-              <h2 className="text-md font-bold text-slate-400">Welcome to ArenaIQ Support</h2>
-              <p className="text-xs mt-1 leading-relaxed">
+              <span className="text-5xl mb-4">🏟️</span>
+              <h2 className="text-md font-black text-slate-300">Welcome to ArenaIQ Support</h2>
+              <p className="text-xs mt-2 leading-relaxed text-slate-500">
                 Choose your language above and ask operational or facility questions. 
                 (Example: &quot;Where is concession plaza?&quot; or &quot;What is Gate A status?&quot;)
               </p>
@@ -279,26 +301,31 @@ export default function AssistantPage() {
                 return (
                   <div 
                     key={index} 
-                    className={`flex items-start gap-3 ${isUser ? 'justify-end' : 'justify-start'}`}
+                    className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}
                   >
                     {!isUser && (
-                      <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-xs font-bold text-white">
+                      <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-tr from-gold to-yellow-500 flex items-center justify-center text-xs font-black text-navy-deep mb-5">
                         IQ
                       </span>
                     )}
 
-                    <div 
-                      className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                        isUser 
-                          ? 'bg-emerald-600 text-white rounded-tr-none' 
-                          : 'bg-zinc-900 border border-zinc-800 text-slate-200 rounded-tl-none'
-                      }`}
-                    >
-                      <p className="whitespace-pre-line">{msg.text}</p>
+                    <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[80%]`}>
+                      <div 
+                        className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                          isUser 
+                            ? 'bg-amber-500/20 border border-amber-500/30 text-white rounded-tr-sm' 
+                            : 'bg-navy-card border-l-4 border-electric-blue text-slate-200 rounded-tl-sm'
+                        }`}
+                      >
+                        <p className="whitespace-pre-line">{msg.text}</p>
+                      </div>
+                      {msg.timestamp && (
+                        <span className="text-xs text-slate-500 mt-1 px-1">{msg.timestamp}</span>
+                      )}
                     </div>
 
                     {isUser && (
-                      <span className="h-8 w-8 shrink-0 rounded-full bg-zinc-800 border border-zinc-700 flex items-center justify-center">
+                      <span className="h-8 w-8 shrink-0 rounded-full bg-navy-card border border-navy-border flex items-center justify-center mb-5">
                         <User className="h-4 w-4 text-slate-300" />
                       </span>
                     )}
@@ -307,11 +334,11 @@ export default function AssistantPage() {
               })}
               
               {sending && (
-                <div className="flex items-center gap-3">
-                  <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-500 flex items-center justify-center text-xs font-bold text-white">
+                <div className="flex items-end gap-2">
+                  <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-tr from-gold to-yellow-500 flex items-center justify-center text-xs font-black text-navy-deep">
                     IQ
                   </span>
-                  <div className="bg-zinc-900 border border-zinc-800 rounded-2xl rounded-tl-none px-4 py-3 flex items-center space-x-1.5">
+                  <div className="bg-navy-card border-l-4 border-electric-blue rounded-2xl rounded-tl-sm px-4 py-3 flex items-center space-x-1.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }}></span>
                     <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }}></span>
                     <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '300ms' }}></span>
@@ -324,38 +351,43 @@ export default function AssistantPage() {
           )}
         </section>
 
-        {/* Input Form Area */}
-        <form 
-          onSubmit={handleSendMessage} 
-          className="mt-4 shrink-0 flex items-center gap-2"
-          aria-label="Send message form"
-        >
-          <div className="relative flex-1">
-            <input
-              type="text"
-              value={inputMsg}
-              onChange={(e) => setInputMsg(e.target.value)}
-              placeholder="Ask ArenaIQ Helper..."
-              disabled={sending}
-              required
-              aria-label="Type your message"
-              className="w-full rounded-xl border border-zinc-850 bg-zinc-900/60 py-3 pl-4 pr-12 text-sm text-white placeholder-slate-500 focus:border-emerald-500 focus:outline-hidden focus:ring-1 focus:ring-emerald-500"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={sending || !inputMsg.trim()}
-            className="p-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition disabled:opacity-50 focus:outline-hidden focus:ring-2 focus:ring-emerald-500"
-            aria-label="Send message"
+        {/* ── INPUT AREA ───────────────────────────────── */}
+        <div className="mt-4 shrink-0 space-y-2">
+          <form 
+            onSubmit={handleSendMessage} 
+            className="flex items-center gap-2"
+            aria-label="Send message form"
           >
-            <Send className="h-5 w-5" />
-          </button>
-        </form>
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={inputMsg}
+                onChange={(e) => setInputMsg(e.target.value)}
+                placeholder="Ask anything about the stadium, matches, facilities..."
+                disabled={sending}
+                required
+                aria-label="Type your message"
+                className="w-full rounded-xl border border-navy-border bg-navy-card/60 py-3 pl-4 pr-12 text-sm text-white placeholder-slate-500 focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={sending || !inputMsg.trim()}
+              className="p-3.5 rounded-xl bg-gold hover:bg-yellow-400 text-navy-deep transition disabled:opacity-50 focus:outline-hidden focus:ring-2 focus:ring-gold"
+              aria-label="Send message"
+            >
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          </form>
+          <p className="text-xs text-slate-500 text-center">
+            Powered by Gemini AI • Responds in your language
+          </p>
+        </div>
 
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-850 bg-zinc-950 py-4 shrink-0 text-center text-[10px] text-slate-600">
+      <footer className="border-t border-navy-border bg-navy-deep py-4 shrink-0 text-center text-[10px] text-slate-600">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <p>© 2026 ArenaIQ AI Assistant.</p>
           <div className="flex items-center space-x-1.5 text-emerald-500">

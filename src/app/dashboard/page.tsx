@@ -10,13 +10,13 @@ import {
   Activity, 
   LogOut, 
   Accessibility, 
-  Play, 
   Loader2,
   Calendar,
   MapPin,
   Clock,
   ArrowRight,
-  Compass
+  Compass,
+  Zap
 } from 'lucide-react'
 
 interface Zone {
@@ -159,32 +159,40 @@ export default function DashboardPage() {
     if (ratio >= 0.9) {
       return {
         level: 'Critical',
-        bg: 'bg-red-950/20 border-navy-border border-l-4 border-l-red-500',
-        text: 'text-red-400 font-bold',
-        badge: 'bg-red-500/20 text-red-400 font-bold border border-red-500/30',
+        barColor: 'bg-red-500',
+        indicatorColor: 'bg-red-500',
+        text: 'text-red-400 font-black',
+        badge: 'bg-red-500/20 text-red-400 font-bold border border-red-500/40',
+        statusLabel: 'CRITICAL',
       }
     }
     if (ratio >= 0.7) {
       return {
         level: 'High',
-        bg: 'bg-orange-950/15 border-navy-border border-l-4 border-l-orange-500',
-        text: 'text-orange-455 font-semibold',
-        badge: 'bg-orange-500/20 text-orange-400 font-semibold border border-orange-500/30',
+        barColor: 'bg-orange-500',
+        indicatorColor: 'bg-orange-500',
+        text: 'text-orange-400 font-black',
+        badge: 'bg-orange-500/20 text-orange-400 font-semibold border border-orange-500/40',
+        statusLabel: 'CROWDED',
       }
     }
     if (ratio >= 0.4) {
       return {
         level: 'Medium',
-        bg: 'bg-amber-950/15 border-navy-border border-l-4 border-l-amber-500',
-        text: 'text-amber-400',
-        badge: 'bg-amber-500/20 text-amber-400 font-medium border border-amber-500/30',
+        barColor: 'bg-amber-500',
+        indicatorColor: 'bg-amber-500',
+        text: 'text-amber-400 font-bold',
+        badge: 'bg-amber-500/20 text-amber-400 font-medium border border-amber-500/40',
+        statusLabel: 'FILLING',
       }
     }
     return {
       level: 'Low',
-      bg: 'bg-navy-card/45 border-navy-border border-l-4 border-l-emerald-500',
-      text: 'text-emerald-400',
-      badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30',
+      barColor: 'bg-emerald-500',
+      indicatorColor: 'bg-emerald-500',
+      text: 'text-emerald-400 font-bold',
+      badge: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40',
+      statusLabel: 'OPEN',
     }
   }
 
@@ -210,23 +218,37 @@ export default function DashboardPage() {
         {liveAnnouncement}
       </div>
 
-      {/* Navigation Header */}
+      {/* ── COMMAND CENTER TOP BAR ─────────────────────────── */}
       <header className="border-b border-navy-border bg-navy-card/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             
-            {/* Logo */}
-            <div className="flex items-center space-x-3">
+            {/* Left: Logo + COMMAND CENTER label */}
+            <div className="flex items-center gap-3">
               <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_10px_rgba(255,215,0,0.3)]">
                 <Activity className="h-5 w-5 text-navy-deep" />
               </span>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Arena<span className="text-gold">IQ</span>
+              <div>
+                <span className="text-xl font-bold tracking-tight text-white">
+                  Arena<span className="text-gold">IQ</span>
+                </span>
+                <span className="hidden sm:block text-[10px] font-black tracking-[0.18em] text-electric-blue uppercase">
+                  Command Center
+                </span>
+              </div>
+            </div>
+
+            {/* Center: MATCHDAY OPERATIONS — LIVE */}
+            <div className="hidden md:flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-red-400 animate-ping"></span>
+              <span className="text-xs font-black tracking-widest text-white uppercase">
+                Matchday Operations
               </span>
+              <span className="text-xs font-black tracking-widest text-red-400 uppercase">— Live</span>
             </div>
 
             {/* Navigation links */}
-            <nav className="hidden md:flex space-x-1" aria-label="Main Navigation">
+            <nav className="hidden lg:flex space-x-1" aria-label="Main Navigation">
               <Link 
                 href="/dashboard" 
                 className="px-3 py-2 rounded-lg text-sm font-semibold bg-navy-deep text-gold border border-navy-border"
@@ -256,11 +278,13 @@ export default function DashboardPage() {
               )}
             </nav>
 
-            {/* Profile & Controls */}
-            <div className="flex items-center space-x-4">
-              <div className="hidden sm:flex flex-col text-right">
-                <span className="text-xs text-slate-400">Operator</span>
-                <span className="text-sm font-semibold text-slate-200">{user?.email}</span>
+            {/* Right: Role badge + logout */}
+            <div className="flex items-center space-x-3">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-[10px] font-bold tracking-widest text-electric-blue uppercase">
+                  {profile?.role || 'Operator'}
+                </span>
+                <span className="text-xs font-semibold text-slate-300 truncate max-w-[140px]">{user?.email}</span>
               </div>
 
               <button
@@ -301,10 +325,11 @@ export default function DashboardPage() {
                 <span>Error: {simError}</span>
               </div>
             )}
+            {/* Prominent gold Simulate button */}
             <button
               onClick={triggerSimulation}
               disabled={simulating}
-              className="inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-electric-blue hover:bg-[#0092c7] text-white font-bold text-sm transition focus:outline-hidden focus:ring-2 focus:ring-electric-blue disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-lg bg-gold hover:bg-yellow-400 text-navy-deep font-black text-sm transition focus:outline-hidden focus:ring-2 focus:ring-gold disabled:opacity-50 shadow-[0_0_20px_rgba(245,197,24,0.15)]"
               aria-label="Trigger crowd movement simulation step"
             >
               {simulating ? (
@@ -314,8 +339,8 @@ export default function DashboardPage() {
                 </>
               ) : (
                 <>
-                  <Play className="mr-2 h-4 w-4" />
-                  Trigger Simulation Nudge
+                  <Zap className="mr-2 h-4 w-4" />
+                  Simulate Crowd Movement
                 </>
               )}
             </button>
@@ -335,27 +360,32 @@ export default function DashboardPage() {
         {/* Top Info Cards: Match Card & Quick Navigation widget */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          {/* Match Info Card */}
-          <section aria-label="Current Matchday Information" className="border border-navy-border bg-navy-card/40 p-6 rounded-2xl shadow-xl flex flex-col justify-between">
+          {/* ── SCOREBOARD MATCH CARD ─────────────────────── */}
+          <section aria-label="Current Matchday Information" className="border border-navy-border bg-navy-card/40 p-6 rounded-2xl shadow-[0_0_30px_rgba(245,197,24,0.1)] flex flex-col justify-between">
             <div>
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20">
+              <div className="flex items-center justify-between mb-4">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-black bg-red-500/10 text-red-400 border border-red-500/20">
+                  <span className="h-1.5 w-1.5 rounded-full bg-red-400 animate-ping"></span>
                   LIVE MATCHDAY
                 </span>
-                <span className="text-xs text-slate-400 flex items-center gap-1 font-semibold">
-                  <Clock className="h-3.5 w-3.5 text-gold" />
-                  80&apos; Played
+                <span className="text-xs text-electric-blue flex items-center gap-1 font-black tracking-widest">
+                  <Clock className="h-3.5 w-3.5" />
+                  80&apos; PLAYED
                 </span>
               </div>
               
-              <div className="mt-4 p-4 rounded-xl bg-navy-deep/80 border border-navy-border flex items-center justify-between shadow-inner">
-                <span className="text-xl sm:text-2xl font-black tracking-wider uppercase text-white">Mexico</span>
-                <span className="text-3xl sm:text-4xl font-black tracking-widest font-mono bg-black/60 px-4 py-1.5 rounded-lg border border-navy-border shadow-inner" style={{ color: '#f5c518' }}>
-                  2 - 1
-                </span>
-                <span className="text-xl sm:text-2xl font-black tracking-wider uppercase text-white">USA</span>
+              {/* Scoreboard */}
+              <div className="mt-2 p-6 rounded-xl bg-navy-deep/90 border border-navy-border flex items-center justify-between shadow-inner">
+                <span className="text-2xl sm:text-3xl font-black tracking-widest uppercase text-white">MEXICO</span>
+                <div className="flex flex-col items-center">
+                  <span className="text-5xl font-black tracking-widest font-mono" style={{ color: '#f5c518' }}>
+                    2 — 1
+                  </span>
+                  <span className="text-xs text-electric-blue font-bold tracking-wider mt-1">ESTADIO AZTECA • 80&apos;</span>
+                </div>
+                <span className="text-2xl sm:text-3xl font-black tracking-widest uppercase text-white">USA</span>
               </div>
-              <p className="text-sm text-slate-400 mt-3 font-semibold text-center sm:text-left">FIFA World Cup 2026™ • Group Stage Match</p>
+              <p className="text-xs text-slate-500 mt-3 font-semibold text-center">FIFA World Cup 2026™ • Group Stage Match</p>
             </div>
             
             <div className="mt-6 pt-6 border-t border-navy-border grid grid-cols-2 gap-4 text-xs text-slate-400">
@@ -426,8 +456,8 @@ export default function DashboardPage() {
 
         </div>
 
-        {/* Grid Layout of Zones */}
-        <section aria-label="Stadium Zones Heatmap" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* ── ZONE CARDS GRID ──────────────────────────────── */}
+        <section aria-label="Stadium Zones Heatmap" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {zones.map((zone) => {
             const details = getDensityDetails(zone.current_occupancy, zone.capacity)
             const ratio = zone.current_occupancy / zone.capacity
@@ -436,49 +466,49 @@ export default function DashboardPage() {
             return (
               <article 
                 key={zone.id} 
-                className={`border rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col justify-between ${details.bg}`}
+                className="border border-navy-border rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg bg-navy-card/40 flex"
               >
-                <div>
-                  {/* Header Row */}
-                  <div className="flex justify-between items-start mb-4">
+                {/* Left colored density indicator bar */}
+                <div className={`w-2 shrink-0 ${details.indicatorColor}`} aria-hidden="true" />
+                
+                {/* Card content */}
+                <div className="flex-1 p-5">
+                  <div className="flex items-start justify-between mb-3">
                     <div>
-                      <h2 className="text-lg font-bold text-white tracking-tight">{zone.name}</h2>
-                      <span className="text-xs text-slate-400 block mt-0.5">{zone.section}</span>
+                      <h2 className="text-sm font-bold text-white tracking-tight leading-tight">{zone.name}</h2>
+                      <span className="text-xs text-slate-500 block mt-0.5">{zone.section}</span>
                     </div>
-                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${details.badge}`}>
-                      {details.level}
+                    {/* Large percentage on the right */}
+                    <span className={`text-2xl font-black ${details.text} ml-2 shrink-0`}>
+                      {percent}%
                     </span>
                   </div>
 
-                  {/* Occupancy stats */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Current Occupancy:</span>
-                      <span className={`font-semibold ${details.text}`}>{zone.current_occupancy.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-400">Max Capacity:</span>
-                      <span className="text-slate-300 font-medium">{zone.capacity.toLocaleString()}</span>
-                    </div>
+                  {/* Occupancy as X,XXX / Y,XXX */}
+                  <div className="text-sm text-slate-400 mb-3">
+                    <span className="font-semibold text-slate-200">{zone.current_occupancy.toLocaleString()}</span>
+                    <span className="text-slate-500"> / </span>
+                    <span>{zone.capacity.toLocaleString()}</span>
                   </div>
-                </div>
 
-                {/* Progress bar */}
-                <div className="mt-6 space-y-1.5">
-                  <div className="h-2 w-full rounded-full bg-navy-deep overflow-hidden">
+                  {/* Progress bar */}
+                  <div className="h-1.5 w-full rounded-full bg-navy-deep overflow-hidden mb-3">
                     <div 
-                      className={`h-full rounded-full transition-all duration-700 ${
-                        ratio >= 0.9 ? 'bg-red-500' : ratio >= 0.7 ? 'bg-orange-500' : ratio >= 0.4 ? 'bg-amber-500' : 'bg-emerald-500'
-                      }`}
+                      className={`h-full rounded-full transition-all duration-700 ${details.barColor}`}
                       style={{ width: `${percent}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-slate-400">
-                    <span className="font-semibold">{percent}% Filled</span>
-                    <span className="capitalize">Status: <strong className={zone.status === 'closed' ? 'text-red-400' : 'text-slate-300'}>{zone.status}</strong></span>
+
+                  {/* Status badge */}
+                  <div className="flex items-center justify-between">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest uppercase ${details.badge}`}>
+                      {details.statusLabel}
+                    </span>
+                    <span className="text-[10px] text-slate-500 capitalize">
+                      Zone: <span className={zone.status === 'closed' ? 'text-red-400' : 'text-slate-300'}>{zone.status}</span>
+                    </span>
                   </div>
                 </div>
-
               </article>
             )
           })}

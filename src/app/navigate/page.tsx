@@ -13,7 +13,8 @@ import {
   Accessibility, 
   Compass, 
   Sparkles,
-  Loader2
+  Loader2,
+  ArrowRight
 } from 'lucide-react'
 
 interface Zone {
@@ -43,12 +44,12 @@ interface ParsedExplanation {
 }
 
 const LANGUAGES = [
-  { code: 'en', name: 'English' },
-  { code: 'es', name: 'Español (Spanish)' },
-  { code: 'fr', name: 'Français (French)' },
-  { code: 'ar', name: 'العربية (Arabic)' },
-  { code: 'pt', name: 'Português (Portuguese)' },
-  { code: 'hi', name: 'हिन्दी (Hindi)' },
+  { code: 'en', name: 'English', flag: '🇬🇧' },
+  { code: 'es', name: 'Español', flag: '🇪🇸' },
+  { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+  { code: 'pt', name: 'Português', flag: '🇧🇷' },
+  { code: 'hi', name: 'हिन्दी', flag: '🇮🇳' },
 ]
 
 export default function NavigatePage() {
@@ -129,8 +130,12 @@ export default function NavigatePage() {
     }
   }
 
+  const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0]
+  const fromZone = zones.find(z => z.id === startZone)
+  const toZone = zones.find(z => z.id === endZone)
+
   return (
-    <div className="min-h-screen bg-zinc-950 text-slate-100 font-sans">
+    <div className="min-h-screen bg-navy-deep text-slate-100 font-sans stadium-grid">
       
       {/* Screen Reader Live region */}
       <div className="sr-only" aria-live="assertive" aria-atomic="true">
@@ -138,46 +143,51 @@ export default function NavigatePage() {
       </div>
 
       {/* Navigation Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-50">
+      <header className="border-b border-navy-border bg-navy-card/80 backdrop-blur-md sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             
             {/* Logo */}
-            <div className="flex items-center space-x-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-500">
-                <Activity className="h-5 w-5 text-white" />
+            <div className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_10px_rgba(255,215,0,0.3)]">
+                <Activity className="h-5 w-5 text-navy-deep" />
               </span>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Arena<span className="text-emerald-400">IQ</span>
-              </span>
+              <div>
+                <span className="text-xl font-bold tracking-tight text-white">
+                  Arena<span className="text-gold">IQ</span>
+                </span>
+                <span className="hidden sm:block text-[10px] font-black tracking-[0.18em] text-electric-blue uppercase">
+                  Command Center
+                </span>
+              </div>
             </div>
 
             {/* Navigation links */}
             <nav className="hidden md:flex space-x-1" aria-label="Main Navigation">
               <Link 
                 href="/dashboard" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
               >
                 Heatmap Dashboard
               </Link>
               <Link 
                 href="/navigate" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold bg-zinc-800 text-emerald-400 border border-zinc-700"
+                className="px-3 py-2 rounded-lg text-sm font-semibold bg-navy-deep text-gold border border-navy-border"
                 aria-current="page"
               >
                 Smart Route Planner
               </Link>
               <Link 
                 href="/assistant" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800"
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
               >
                 Multilingual AI Assistant
               </Link>
             </nav>
 
             <div className="flex items-center space-x-4">
-              <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                Live Nav Mode
+              <span className="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-xs font-black bg-gold/10 text-gold border border-gold/20 tracking-wider">
+                WAYFINDING TERMINAL
               </span>
             </div>
 
@@ -188,10 +198,10 @@ export default function NavigatePage() {
       {/* Main Content */}
       <main role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        {/* Title */}
+        {/* ── PAGE TITLE ─────────────────────────────────── */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Smart Route Optimizer
+          <h1 className="text-4xl sm:text-5xl font-black text-gold tracking-tight" style={{ letterSpacing: '-0.03em' }}>
+            FIND YOUR ROUTE
           </h1>
           <p className="mt-2 text-slate-400">
             Dijkstra-calculated routes over stadium spatial graphs. Avoids closed paths and bypasses crowded sections dynamically.
@@ -201,30 +211,32 @@ export default function NavigatePage() {
         {/* Layout Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Form Planner Card */}
-          <div className="lg:col-span-1 border border-zinc-800 bg-zinc-900/30 p-6 rounded-2xl shadow-xl h-fit">
-            <h2 className="text-lg font-bold text-white mb-6 flex items-center gap-2">
-              <Compass className="h-5 w-5 text-emerald-400" />
+          {/* ── FORM PLANNER ─────────────────────────────── */}
+          <div className="lg:col-span-1 border border-navy-border bg-navy-card/40 p-6 rounded-2xl shadow-xl h-fit space-y-6">
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <Compass className="h-5 w-5 text-gold" />
               Configure Route
             </h2>
 
             {loadingZones ? (
               <div className="flex justify-center py-6">
-                <Loader2 className="h-6 w-6 animate-spin text-emerald-500" />
+                <Loader2 className="h-6 w-6 animate-spin text-gold" />
               </div>
             ) : (
               <form onSubmit={handleGetRoute} className="space-y-5" aria-label="Route Selection Form">
                 
+                {/* FROM selector card */}
                 <div>
-                  <label htmlFor="start-zone-select" className="block text-sm font-semibold text-slate-300">
-                    Departure Location
-                  </label>
+                  <div className="text-xs font-black tracking-widest text-electric-blue uppercase mb-2 flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5" />
+                    📍 FROM
+                  </div>
                   <select
                     id="start-zone-select"
                     value={startZone}
                     onChange={(e) => setStartZone(e.target.value)}
                     required
-                    className="mt-1 block w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2 px-3 text-white focus:border-emerald-500 focus:outline-hidden focus:ring-1 focus:ring-emerald-500 sm:text-sm"
+                    className="block w-full rounded-xl border border-navy-border bg-navy-deep py-3 px-4 text-sm text-white focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
                   >
                     <option value="">Select departure zone...</option>
                     {zones.map((z) => (
@@ -233,18 +245,25 @@ export default function NavigatePage() {
                       </option>
                     ))}
                   </select>
+                  {fromZone && (
+                    <div className="mt-2 px-3 py-2 rounded-lg bg-navy-deep/60 border border-navy-border/60">
+                      <span className="text-sm font-bold text-white">{fromZone.name}</span>
+                    </div>
+                  )}
                 </div>
 
+                {/* TO selector card */}
                 <div>
-                  <label htmlFor="end-zone-select" className="block text-sm font-semibold text-slate-300">
-                    Destination Location
-                  </label>
+                  <div className="text-xs font-black tracking-widest text-gold uppercase mb-2 flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5" />
+                    🎯 TO
+                  </div>
                   <select
                     id="end-zone-select"
                     value={endZone}
                     onChange={(e) => setEndZone(e.target.value)}
                     required
-                    className="mt-1 block w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2 px-3 text-white focus:border-emerald-500 focus:outline-hidden focus:ring-1 focus:ring-emerald-500 sm:text-sm"
+                    className="block w-full rounded-xl border border-navy-border bg-navy-deep py-3 px-4 text-sm text-white focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
                   >
                     <option value="">Select destination...</option>
                     {zones.map((z) => (
@@ -253,41 +272,56 @@ export default function NavigatePage() {
                       </option>
                     ))}
                   </select>
+                  {toZone && (
+                    <div className="mt-2 px-3 py-2 rounded-lg bg-navy-deep/60 border border-navy-border/60">
+                      <span className="text-sm font-bold text-white">{toZone.name}</span>
+                    </div>
+                  )}
                 </div>
 
+                {/* Language selector */}
                 <div>
-                  <label htmlFor="lang-select" className="block text-sm font-semibold text-slate-300">
+                  <label htmlFor="lang-select" className="block text-xs font-black tracking-widest text-slate-400 uppercase mb-2">
                     AI Guide Language
                   </label>
-                  <select
-                    id="lang-select"
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    className="mt-1 block w-full rounded-lg border border-zinc-800 bg-zinc-950 py-2 px-3 text-white focus:border-emerald-500 focus:outline-hidden focus:ring-1 focus:ring-emerald-500 sm:text-sm"
-                  >
-                    {LANGUAGES.map((l) => (
-                      <option key={l.code} value={l.code}>{l.name}</option>
-                    ))}
-                  </select>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xl">{selectedLang.flag}</span>
+                    <select
+                      id="lang-select"
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className="flex-1 rounded-xl border border-navy-border bg-navy-deep py-2.5 px-3 text-sm text-white focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
+                    >
+                      {LANGUAGES.map((l) => (
+                        <option key={l.code} value={l.code}>{l.flag} {l.name}</option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
 
-                {/* Wheelchair toggle */}
-                <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    id="wheelchair-mode-toggle"
-                    checked={wheelchairMode}
-                    onChange={e => setWheelchairMode(e.target.checked)}
-                    aria-label="Enable wheelchair accessible route"
-                    className="h-4 w-4 rounded border-zinc-700 bg-zinc-950 accent-emerald-500"
-                  />
-                  ♿ Wheelchair / Step-free route
-                </label>
+                {/* Wheelchair toggle — proper toggle switch */}
+                <div className="flex items-center justify-between p-3 rounded-xl border border-navy-border bg-navy-deep/50">
+                  <label htmlFor="wheelchair-mode-toggle" className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer select-none">
+                    <Accessibility className="h-4 w-4 text-teal-400" />
+                    <span>♿ Wheelchair / Step-free route</span>
+                  </label>
+                  <label className="toggle-switch" aria-label="Enable wheelchair accessible route">
+                    <input
+                      type="checkbox"
+                      id="wheelchair-mode-toggle"
+                      checked={wheelchairMode}
+                      onChange={e => setWheelchairMode(e.target.checked)}
+                      aria-label="Enable wheelchair accessible route"
+                    />
+                    <span className="toggle-slider"></span>
+                  </label>
+                </div>
 
+                {/* Calculate Route button */}
                 <button
                   type="submit"
                   disabled={calculating || !startZone || !endZone}
-                  className="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm transition focus:outline-hidden focus:ring-2 focus:ring-emerald-500 disabled:opacity-50"
+                  className="w-full inline-flex items-center justify-center px-6 py-4 rounded-xl bg-gold hover:bg-yellow-400 text-navy-deep font-black text-sm tracking-wide transition focus:outline-hidden focus:ring-2 focus:ring-gold disabled:opacity-50 shadow-[0_0_20px_rgba(245,197,24,0.15)]"
                   aria-label="Calculate optimal route and generate directions"
                 >
                   {calculating ? (
@@ -296,7 +330,10 @@ export default function NavigatePage() {
                       Optimizing Path...
                     </>
                   ) : (
-                    'Get AI Directions'
+                    <>
+                      Calculate Route
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </>
                   )}
                 </button>
 
@@ -304,20 +341,20 @@ export default function NavigatePage() {
             )}
           </div>
 
-          {/* Directions Output Card */}
+          {/* ── DIRECTIONS OUTPUT ─────────────────────────── */}
           <div className="lg:col-span-2 space-y-6">
             
             {!routeResult && !calculating && (
-              <div className="border border-dashed border-zinc-800 rounded-2xl p-12 text-center text-slate-500">
-                <MapPin className="mx-auto h-12 w-12 text-zinc-700 mb-4" />
+              <div className="border border-dashed border-navy-border rounded-2xl p-12 text-center text-slate-500">
+                <MapPin className="mx-auto h-12 w-12 text-navy-border mb-4" />
                 <h3 className="text-lg font-bold text-slate-400">No route calculated yet</h3>
                 <p className="text-sm mt-1">Select your starting position and destination to generate smart routing.</p>
               </div>
             )}
 
             {calculating && (
-              <div className="border border-zinc-800 bg-zinc-900/10 rounded-2xl p-12 text-center text-slate-400 flex flex-col items-center">
-                <Loader2 className="h-10 w-10 animate-spin text-emerald-500 mb-4" />
+              <div className="border border-navy-border bg-navy-card/10 rounded-2xl p-12 text-center text-slate-400 flex flex-col items-center">
+                <Loader2 className="h-10 w-10 animate-spin text-gold mb-4" />
                 <h3 className="text-lg font-bold text-white">Calculating Graph Traversal</h3>
                 <p className="text-sm mt-1">Running Dijkstra over zone vertices and consulting Gemini for language localization...</p>
               </div>
@@ -334,29 +371,29 @@ export default function NavigatePage() {
             {routeResult && routeResult.success && (
               <div className="space-y-6">
                 
-                {/* Metrics Summary */}
-                <section aria-label="Route Metrics Summary" className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-zinc-800 bg-zinc-900/30 p-6 rounded-2xl">
+                {/* ── ROUTE METRICS ──────────────────────── */}
+                <section aria-label="Route Metrics Summary" className="grid grid-cols-1 sm:grid-cols-2 gap-4 border border-navy-border bg-navy-card/30 p-6 rounded-2xl">
                   
                   <div className="flex items-center space-x-3">
-                    <div className="p-3 rounded-lg bg-emerald-500/10 text-emerald-400">
+                    <div className="p-3 rounded-lg bg-gold/10 text-gold">
                       <Clock className="h-6 w-6" />
                     </div>
                     <div>
                       <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Walk Time</p>
-                      <h3 className="text-xl font-bold text-white mt-0.5">
-                        {Math.round((routeResult.rawTime || 0) / 60)} mins
-                        <span className="text-xs text-slate-500 font-normal ml-1">({routeResult.rawTime}s)</span>
+                      <h3 className="text-3xl font-black text-gold tracking-tight">
+                        ~{Math.round((routeResult.rawTime || 0) / 60)} MIN WALK
                       </h3>
+                      <span className="text-xs text-slate-500">({routeResult.rawTime}s estimated)</span>
                     </div>
                   </div>
 
                   <div className="flex items-center space-x-3">
-                    <div className="p-3 rounded-lg bg-teal-500/10 text-teal-400">
+                    <div className="p-3 rounded-lg bg-electric-blue/10 text-electric-blue">
                       <Compass className="h-6 w-6" />
                     </div>
                     <div>
                       <p className="text-xs text-slate-400 uppercase tracking-wider font-semibold">Nodes Traversed</p>
-                      <h3 className="text-xl font-bold text-white mt-0.5">
+                      <h3 className="text-3xl font-black text-electric-blue tracking-tight">
                         {routeResult.path?.length} Zones
                       </h3>
                     </div>
@@ -364,32 +401,32 @@ export default function NavigatePage() {
 
                 </section>
 
-                {/* AI Explanation block */}
-                <section aria-label="GenAI Route Walkthrough" className="border border-zinc-800 bg-zinc-900/10 p-6 rounded-2xl shadow-lg relative overflow-hidden">
+                {/* ── AI EXPLANATION ─────────────────────── */}
+                <section aria-label="GenAI Route Walkthrough" className="border border-navy-border bg-navy-card/10 p-6 rounded-2xl shadow-lg relative overflow-hidden">
                   
                   <div className="absolute top-0 right-0 p-4 opacity-5 text-white pointer-events-none">
                     <Sparkles className="h-32 w-32" />
                   </div>
 
-                  <div className="flex items-center space-x-2 text-emerald-400 font-bold mb-4">
-                    <Sparkles className="h-5 w-5" />
-                    <h3 className="text-md text-white">GenAI Direction Explanation</h3>
+                  <div className="flex items-center space-x-2 mb-4">
+                    <Sparkles className="h-5 w-5 text-gold" />
+                    <h3 className="text-md font-bold text-white">GenAI Direction Explanation</h3>
                   </div>
 
                   {parsedExplanation ? (
                     <div className="space-y-4">
-                      {/* Congestion warning in a red alert box */}
+                      {/* Congestion warning — red alert banner */}
                       {parsedExplanation.congestion_warning && (
-                        <div className="border border-red-500/30 bg-red-500/10 p-4 rounded-xl text-red-400 flex items-start gap-2.5" role="alert">
-                          <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
+                        <div className="border border-red-500/40 bg-red-500/10 p-4 rounded-xl text-red-400 flex items-start gap-2.5" role="alert">
+                          <span className="text-lg">⚠️</span>
                           <div>
-                            <h4 className="font-bold text-white text-sm">Congestion Warning</h4>
+                            <h4 className="font-black text-white text-sm">CONGESTION WARNING</h4>
                             <p className="text-sm mt-0.5">{parsedExplanation.congestion_warning}</p>
                           </div>
                         </div>
                       )}
 
-                      {/* Accessibility note prominently for wheelchair users */}
+                      {/* Accessibility note */}
                       {parsedExplanation.accessibility_note && (
                         <div className="border border-teal-500/30 bg-teal-500/10 p-4 rounded-xl text-teal-400 flex items-start gap-2.5">
                           <Accessibility className="h-5 w-5 shrink-0 mt-0.5" />
@@ -400,30 +437,28 @@ export default function NavigatePage() {
                         </div>
                       )}
 
-                      {/* Steps as a numbered list */}
+                      {/* Steps as numbered list */}
                       <div>
-                        <h4 className="font-bold text-white text-sm mb-2">Step-by-Step Directions</h4>
-                        <ol className="list-decimal pl-5 space-y-1.5 text-sm text-slate-300">
+                        <h4 className="font-bold text-white text-sm mb-3">Step-by-Step Directions</h4>
+                        <ol className="space-y-3">
                           {parsedExplanation.steps?.map((step: string, idx: number) => (
-                            <li key={idx} className="pl-1">{step}</li>
+                            <li key={idx} className="flex items-start gap-3">
+                              <span className="flex-shrink-0 h-7 w-7 rounded-full bg-gold text-navy-deep text-xs font-black flex items-center justify-center">
+                                {idx + 1}
+                              </span>
+                              <span className="text-sm text-slate-300 leading-relaxed pt-0.5">{step}</span>
+                            </li>
                           ))}
                         </ol>
                       </div>
 
-                      {/* Estimated walk time summary */}
-                      {parsedExplanation.estimated_minutes && (
-                        <p className="text-sm text-slate-400">
-                          Estimated time: <span className="text-white font-semibold">{parsedExplanation.estimated_minutes} minutes</span>
-                        </p>
-                      )}
-
-                      {/* AI reasoning in a collapsible "Why this route?" section */}
+                      {/* AI reasoning — collapsible */}
                       {parsedExplanation.ai_reasoning && (
-                        <details className="mt-4 border border-zinc-800 rounded-lg bg-zinc-950/40">
-                          <summary className="cursor-pointer px-4 py-2 text-sm font-semibold text-slate-300 hover:text-white select-none focus:outline-hidden">
-                            Why this route?
+                        <details className="mt-4 border border-navy-border rounded-lg bg-navy-deep/40">
+                          <summary className="cursor-pointer px-4 py-2.5 text-sm font-semibold text-electric-blue hover:text-white select-none focus:outline-hidden">
+                            Why this route? ›
                           </summary>
-                          <div className="px-4 pb-4 pt-2 text-sm text-slate-400 border-t border-zinc-800/40 leading-relaxed">
+                          <div className="px-4 pb-4 pt-2 text-sm text-slate-400 border-t border-navy-border/40 leading-relaxed">
                             {parsedExplanation.ai_reasoning}
                           </div>
                         </details>
@@ -435,16 +470,16 @@ export default function NavigatePage() {
                     </p>
                   )}
 
-                  <div className="mt-4 pt-4 border-t border-zinc-800 text-xs text-slate-500">
+                  <div className="mt-4 pt-4 border-t border-navy-border text-xs text-slate-500">
                     Explanation compiled server-side via Gemini API. Paths computed algorithmically to prevent hallucinations.
                   </div>
                 </section>
 
-                {/* Path display list */}
-                <section aria-label="Calculated Path Steps" className="border border-zinc-800 bg-zinc-900/30 p-6 rounded-2xl">
+                {/* ── PATH BREAKDOWN ─────────────────────── */}
+                <section aria-label="Calculated Path Steps" className="border border-navy-border bg-navy-card/30 p-6 rounded-2xl">
                   <h3 className="text-md font-bold text-white mb-4">Spatial Path Breakdown</h3>
                   
-                  <ol className="relative border-l border-zinc-700 ml-4 space-y-6">
+                  <ol className="relative border-l border-navy-border ml-4 space-y-6">
                     {routeResult.pathNames?.map((name, index) => {
                       const zoneId = routeResult.path?.[index] || ''
                       const isCrowded = routeResult.congestedZones?.includes(zoneId)
@@ -453,8 +488,8 @@ export default function NavigatePage() {
 
                       return (
                         <li key={index} className="mb-2 ml-6">
-                          <span className={`absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
-                            isStart ? 'bg-emerald-500 text-zinc-950 font-bold' : isEnd ? 'bg-teal-500 text-zinc-950 font-bold' : isCrowded ? 'bg-orange-500 text-white' : 'bg-zinc-800 text-slate-300'
+                          <span className={`absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full text-xs font-black ${
+                            isStart ? 'bg-gold text-navy-deep' : isEnd ? 'bg-emerald-500 text-navy-deep' : isCrowded ? 'bg-orange-500 text-white' : 'bg-navy-card text-slate-300 border border-navy-border'
                           }`}>
                             {index + 1}
                           </span>
@@ -487,7 +522,7 @@ export default function NavigatePage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 bg-zinc-950 py-6 mt-16 text-center text-xs text-slate-500">
+      <footer className="border-t border-navy-border bg-navy-deep py-6 mt-16 text-center text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p>© 2026 FIFA World Cup ArenaIQ. Real-time operations dashboard.</p>
           <div className="flex items-center space-x-2 text-emerald-400">
