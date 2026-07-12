@@ -167,3 +167,47 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 **ESLint**: ✅ 0 warnings, 0 errors (`--max-warnings=0`)
 **Commit**: `3b5751d` pushed to `origin/main`
 
+### 12. Persistent App Shell Redesign (Phase 8)
+**Scope**: Visual/structural redesign of the authenticated app shell — new persistent sidebar for desktop + bottom tab bar for mobile. Zero logic or API changes.
+
+**New Component**: `src/components/layout/AppShell.tsx`
+* Client component wrapping all authenticated page content
+* **Desktop sidebar** (fixed 240px): ArenaIQ logo with gold "IQ" suffix, animated "LIVE" red pulsing badge, nav links with active gold left-border state, user email + colored role pill (fan/staff/organizer), sign-out button
+* **Mobile bottom tab bar** (fixed, `< md`): 5 emoji+label tabs with active gold highlight, gold underline indicator dot
+* **Top bar**: page title prop (desktop) / logo+hamburger (mobile), live clock updating every second, "FIFA WC 2026" gold badge
+* **Nav items**: Dashboard (🏠), Navigate (🗺️), Assistant (💬), Staff Ops (📋), Matches (🏆)
+* Auth loaded inside AppShell via Supabase client — no per-page auth boilerplate needed
+
+**New Route**: `src/app/matches/page.tsx` — placeholder page for upcoming matches feature
+
+**Pages updated** (header/footer/nav removed, wrapped in AppShell):
+* `src/app/dashboard/page.tsx` — title: "Command Center"
+* `src/app/navigate/page.tsx` — title: "Smart Route Planner"
+* `src/app/assistant/page.tsx` — title: "AI Assistant"
+* `src/app/staff/page.tsx` — title: "Staff Ops"
+
+**Build**: ✅ TypeScript clean, Compiled successfully (Next.js 16.2.4 Turbopack)
+
+### 13. Page Content Redesign (Phase 8 — Interior)
+**Scope**: Redesign of page content areas (inside AppShell). Zero API/logic changes.
+
+**globals.css additions**: `.arena-card`, `.arena-card-sm`, `.status-open/crowded/closed/critical`, `.stat-number`, `.section-heading`, `.typing-dot` animation keyframe
+
+**Dashboard (`/dashboard`)**:
+* 4-stat top row: Total Fans (gold), High Density Zones (red), Zones Clear (emerald), Last Updated (electric-blue)
+* Full-width FIFA scoreboard with flag emojis, `text-6xl font-black` score, gold progress bar (80/90 match time)
+* Zone heatmap grid: clickable cards → `router.push('/navigate?startZone=...')`, left accent bar, percentage, thin progress bar, status pills using `.status-*` classes
+
+**Navigate (`/navigate`)**:
+* "FIND YOUR ROUTE" heading in white font-black with gold accent
+* Two large selector cards (FROM / TO) with `text-xl font-bold` selects, zone name + status badge preview
+* Options row: wheelchair toggle + language selector side-by-side
+* Gold full-width `⚡ CALCULATE OPTIMAL ROUTE` button
+* Result: emerald "OPTIMAL ROUTE FOUND" header, stat-number walk time, congestion/accessibility cards, numbered steps with ArrowRight icons, collapsible AI reasoning
+
+**Assistant (`/assistant`)**:
+* Fixed-height chat layout (`100vh - 56px`) with flex column
+* Top bar: ArenaIQ title, ✨ Gemini violet badge, flag+language selector, clear button
+* Messages: `bg-gold/15 border-gold/30` user bubbles, `border-l-4 border-electric-blue` AI bubbles, ArenaIQ label above assistant messages
+* Animated `.typing-dot` indicator (electric-blue bouncing dots)
+* Round pill input + gold circle send button (ArrowUp icon)

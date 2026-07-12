@@ -4,17 +4,14 @@ export const dynamic = 'force-dynamic'
 
 import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
-import { 
-  Activity, 
-  ArrowRight,
-  Sparkles, 
-  Trash2, 
-  Accessibility, 
-  Languages, 
+import AppShell from '@/components/layout/AppShell'
+import {
+  ArrowUp,
+  Sparkles,
+  Trash2,
+  Languages,
   User,
-  Loader2 
 } from 'lucide-react'
 
 interface Message {
@@ -24,12 +21,12 @@ interface Message {
 }
 
 const LANGUAGES = [
-  { code: 'en', name: 'English', flag: '🇬🇧' },
-  { code: 'es', name: 'Español (Spanish)', flag: '🇪🇸' },
-  { code: 'fr', name: 'Français (French)', flag: '🇫🇷' },
-  { code: 'ar', name: 'العربية (Arabic)', flag: '🇸🇦' },
+  { code: 'en', name: 'English',              flag: '🇬🇧' },
+  { code: 'es', name: 'Español (Spanish)',    flag: '🇪🇸' },
+  { code: 'fr', name: 'Français (French)',    flag: '🇫🇷' },
+  { code: 'ar', name: 'العربية (Arabic)',     flag: '🇸🇦' },
   { code: 'pt', name: 'Português (Portuguese)', flag: '🇧🇷' },
-  { code: 'hi', name: 'हिन्दी (Hindi)', flag: '🇮🇳' },
+  { code: 'hi', name: 'हिन्दी (Hindi)',       flag: '🇮🇳' },
 ]
 
 function getTimestamp(): string {
@@ -41,19 +38,19 @@ export default function AssistantPage() {
   const supabase = createClient()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>(null)
-  const [messages, setMessages] = useState<Message[]>([])
-  const [inputMsg, setInputMsg] = useState('')
-  const [language, setLanguage] = useState('en')
-  
-  const [sessionId, setSessionId] = useState<string | null>(null)
-  const [sending, setSending] = useState(false)
+  const [user, setUser]     = useState<any>(null)
+  const [messages, setMessages]           = useState<Message[]>([])
+  const [inputMsg, setInputMsg]           = useState('')
+  const [language, setLanguage]           = useState('en')
+  const [sessionId, setSessionId]         = useState<string | null>(null)
+  const [sending, setSending]             = useState(false)
   const [loadingHistory, setLoadingHistory] = useState(false)
   const [liveChatAnnouncement, setLiveChatAnnouncement] = useState('')
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef       = useRef<HTMLInputElement>(null)
 
-  // Load session history from DB
+  // ── Load session history ─────────────────────────────────
   const loadSessionHistory = useCallback(async (id: string) => {
     setLoadingHistory(true)
     try {
@@ -69,7 +66,7 @@ export default function AssistantPage() {
         setMessages(dbMessages.map((m: any) => ({
           role: m.role,
           text: m.parts?.[0]?.text || m.text || '',
-          timestamp: getTimestamp()
+          timestamp: getTimestamp(),
         })))
       }
     } catch {
@@ -79,7 +76,7 @@ export default function AssistantPage() {
     }
   }, [supabase])
 
-  // Verify auth session
+  // ── Auth check ──────────────────────────────────────────
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user }, error } = await supabase.auth.getUser()
@@ -87,7 +84,6 @@ export default function AssistantPage() {
         router.push('/login')
       } else {
         setUser(user)
-        // Look for existing session in localStorage
         const storedSession = localStorage.getItem(`arenaaiq_session_${user.id}`)
         if (storedSession) {
           setSessionId(storedSession)
@@ -98,46 +94,36 @@ export default function AssistantPage() {
     checkAuth()
   }, [router, supabase, loadSessionHistory])
 
-  // Scroll to bottom when messages load/change
+  // ── Scroll to bottom ────────────────────────────────────
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, sending])
 
+  // ── Send message ────────────────────────────────────────
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!inputMsg.trim() || sending) return
 
     const userMessageText = inputMsg.trim()
     setInputMsg('')
-    
-    // Optimistic local state update
     const updatedMessages = [...messages, { role: 'user' as const, text: userMessageText, timestamp: getTimestamp() }]
     setMessages(updatedMessages)
     setSending(true)
-    setLiveChatAnnouncement('Sending message to ArenaIQ assistant...')
+    setLiveChatAnnouncement('Sending message to ArenaIQ assistant…')
 
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: userMessageText,
-          sessionId,
-          language
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessageText, sessionId, language }),
       })
-
       const data = await res.json()
       if (data.success) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         setMessages(data.messages.map((m: any) => ({ ...m, timestamp: m.timestamp || getTimestamp() })))
         if (!sessionId && data.sessionId) {
           setSessionId(data.sessionId)
-          if (user) {
-            localStorage.setItem(`arenaaiq_session_${user.id}`, data.sessionId)
-          }
+          if (user) localStorage.setItem(`arenaaiq_session_${user.id}`, data.sessionId)
         }
         setLiveChatAnnouncement('Reply received from assistant.')
       } else {
@@ -149,254 +135,211 @@ export default function AssistantPage() {
       setLiveChatAnnouncement('Error sending message.')
     } finally {
       setSending(false)
+      setTimeout(() => inputRef.current?.focus(), 100)
     }
   }
 
   const clearChat = () => {
     setMessages([])
     setSessionId(null)
-    if (user) {
-      localStorage.removeItem(`arenaaiq_session_${user.id}`)
-    }
+    if (user) localStorage.removeItem(`arenaaiq_session_${user.id}`)
     setLiveChatAnnouncement('Chat session cleared.')
   }
 
   const selectedLang = LANGUAGES.find(l => l.code === language) || LANGUAGES[0]
 
   return (
-    <div className="min-h-screen bg-navy-deep text-slate-100 font-sans flex flex-col stadium-grid">
-      
-      {/* Screen Reader Live Announcements */}
-      <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {liveChatAnnouncement}
-      </div>
+    <AppShell title="AI Assistant">
 
-      {/* ── HEADER ─────────────────────────────────────── */}
-      <header className="border-b border-navy-border bg-navy-card/80 backdrop-blur-md sticky top-0 z-50 shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            
-            {/* Logo */}
-            <div className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_10px_rgba(255,215,0,0.3)]">
-                <Activity className="h-5 w-5 text-navy-deep" />
-              </span>
-              <div>
-                <span className="text-xl font-bold tracking-tight text-white">
-                  Arena<span className="text-gold">IQ</span>
-                </span>
-                <span className="hidden sm:block text-[10px] font-black tracking-[0.18em] text-electric-blue uppercase">
-                  Command Center
-                </span>
-              </div>
+      {/* SR live region */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">{liveChatAnnouncement}</div>
+
+      {/* Full-height chat layout */}
+      <div className="flex flex-col" style={{ height: 'calc(100vh - 56px)' }}>
+
+        {/* ── CHAT TOP BAR ──────────────────────────────── */}
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-navy-border bg-navy-card/60 backdrop-blur-md shrink-0">
+
+          {/* Left: title */}
+          <div className="flex items-center gap-2.5">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-gold to-yellow-500 shadow-[0_0_10px_rgba(245,197,24,0.3)]">
+              <Sparkles className="h-4 w-4 text-navy-deep" />
+            </span>
+            <div>
+              <h1 className="text-sm font-black text-white tracking-wide">
+                ArenaIQ <span className="text-gold">ASSISTANT</span>
+              </h1>
+              <p className="text-[10px] text-slate-500 hidden sm:block">Stadium ops · matches · facilities</p>
+            </div>
+          </div>
+
+          {/* Right: language + Gemini badge + clear */}
+          <div className="flex items-center gap-2">
+            {/* Gemini badge */}
+            <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-violet-500/10 text-violet-400 border border-violet-500/20 tracking-wider">
+              ✨ Gemini
+            </span>
+
+            {/* Language selector */}
+            <div className="flex items-center gap-1.5 border border-navy-border bg-navy-deep rounded-lg px-2 py-1">
+              <span className="text-base">{selectedLang.flag}</span>
+              <label htmlFor="chat-lang" className="sr-only">Select language</label>
+              <Languages className="h-3 w-3 text-slate-500" />
+              <select
+                id="chat-lang"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="bg-transparent text-xs font-semibold text-white focus:outline-hidden max-w-[80px] sm:max-w-none"
+              >
+                {LANGUAGES.map((l) => (
+                  <option key={l.code} value={l.code} className="bg-navy-deep">{l.flag} {l.name}</option>
+                ))}
+              </select>
             </div>
 
-            {/* Navigation links */}
-            <nav className="hidden md:flex space-x-1" aria-label="Main Navigation">
-              <Link 
-                href="/dashboard" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
+            {/* Clear button */}
+            {messages.length > 0 && (
+              <button
+                onClick={clearChat}
+                className="p-1.5 rounded-lg border border-navy-border hover:bg-navy-card text-slate-400 hover:text-white transition"
+                aria-label="Clear chat history"
               >
-                Heatmap Dashboard
-              </Link>
-              <Link 
-                href="/navigate" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-navy-card"
-              >
-                Smart Route Planner
-              </Link>
-              <Link 
-                href="/assistant" 
-                className="px-3 py-2 rounded-lg text-sm font-semibold bg-navy-deep text-gold border border-navy-border"
-                aria-current="page"
-              >
-                Multilingual AI Assistant
-              </Link>
-            </nav>
-
-            {/* Language Controls — flag + selector inline */}
-            <div className="flex items-center space-x-3">
-              <div className="flex items-center gap-2 border border-navy-border bg-navy-deep rounded-lg px-2 py-1.5">
-                <span className="text-lg">{selectedLang.flag}</span>
-                <label htmlFor="chat-lang" className="sr-only">Select Chat Language</label>
-                <div className="pointer-events-none text-slate-400">
-                  <Languages className="h-3.5 w-3.5" />
-                </div>
-                <select
-                  id="chat-lang"
-                  value={language}
-                  onChange={(e) => setLanguage(e.target.value)}
-                  className="bg-transparent text-xs font-semibold text-white focus:outline-hidden"
-                >
-                  {LANGUAGES.map((l) => (
-                    <option key={l.code} value={l.code} className="bg-navy-deep">{l.flag} {l.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              {messages.length > 0 && (
-                <button
-                  onClick={clearChat}
-                  className="p-2 rounded-lg border border-navy-border hover:bg-navy-card text-slate-400 hover:text-white transition"
-                  aria-label="Clear chat session history"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
         </div>
-      </header>
 
-      {/* Main Chat Area */}
-      <main role="main" className="flex-1 max-w-4xl w-full mx-auto px-4 py-6 flex flex-col min-h-0">
-        
-        {/* ── ASSISTANT HEADER BANNER ──────────────────── */}
-        <section aria-label="Assistant Info" className="bg-navy-card/40 border border-navy-border p-4 rounded-xl mb-4 shrink-0">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <span className="p-2.5 rounded-xl bg-gold/10 border border-gold/20 text-gold">
-                <Sparkles className="h-5 w-5" />
-              </span>
-              <div>
-                <h1 className="text-sm font-black text-white tracking-wide">
-                  ArenaIQ <span className="text-gold">ASSISTANT</span>
-                </h1>
-                <p className="text-xs text-slate-400 mt-0.5">Ask about facilities, match schedules, seating maps, concessions, and transport guidelines.</p>
-              </div>
-            </div>
-            <div className="hidden sm:flex flex-col items-end gap-1">
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-black bg-gold/10 text-gold border border-gold/20 uppercase tracking-wider">
-                Gemini Powered
-              </span>
-              <span className="text-[10px] text-slate-500">{selectedLang.flag} {selectedLang.name}</span>
-            </div>
-          </div>
-        </section>
-
-        {/* ── CHAT MESSAGES ────────────────────────────── */}
-        <section 
-          aria-label="Chat messages history"
-          className="flex-1 bg-navy-deep/60 border border-navy-border rounded-2xl p-4 sm:p-6 overflow-y-auto space-y-4 shadow-inner"
+        {/* ── MESSAGES AREA ─────────────────────────────── */}
+        <section
+          aria-label="Chat messages"
+          className="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-5"
         >
           {loadingHistory ? (
-            <div className="flex flex-col items-center justify-center h-full text-slate-500">
-              <Loader2 className="h-8 w-8 animate-spin text-gold mb-2" />
-              <span className="text-sm">Retrieving conversation history...</span>
+            <div className="flex flex-col items-center justify-center h-full text-slate-500 gap-3">
+              <div className="flex gap-1.5">
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+                <span className="typing-dot" />
+              </div>
+              <span className="text-sm">Retrieving conversation…</span>
             </div>
+
           ) : messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center text-slate-500 max-w-sm mx-auto">
-              <span className="text-5xl mb-4">🏟️</span>
-              <h2 className="text-md font-black text-slate-300">Welcome to ArenaIQ Support</h2>
-              <p className="text-xs mt-2 leading-relaxed text-slate-500">
-                Choose your language above and ask operational or facility questions. 
-                (Example: &quot;Where is concession plaza?&quot; or &quot;What is Gate A status?&quot;)
-              </p>
+            <div className="flex flex-col items-center justify-center h-full text-center gap-4 max-w-sm mx-auto">
+              <span className="text-6xl">🏟️</span>
+              <div>
+                <h2 className="text-lg font-black text-slate-200">Ask me anything</h2>
+                <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+                  About the stadium, matches, or facilities.
+                  <br />Try: <span className="text-slate-300">&quot;Where is Gate A?&quot;</span> or <span className="text-slate-300">&quot;¿Dónde está la enfermería?&quot;</span>
+                </p>
+              </div>
             </div>
+
           ) : (
-            <div className="space-y-4">
+            <>
               {messages.map((msg, index) => {
                 const isUser = msg.role === 'user'
                 return (
-                  <div 
-                    key={index} 
-                    className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}
-                  >
+                  <div key={index} className={`flex items-end gap-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
+
+                    {/* AI avatar */}
                     {!isUser && (
-                      <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-tr from-gold to-yellow-500 flex items-center justify-center text-xs font-black text-navy-deep mb-5">
+                      <span className="h-7 w-7 shrink-0 rounded-full bg-gradient-to-tr from-gold to-yellow-500 flex items-center justify-center text-[10px] font-black text-navy-deep mb-5">
                         IQ
                       </span>
                     )}
 
                     <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[80%]`}>
-                      <div 
-                        className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                          isUser 
-                            ? 'bg-amber-500/20 border border-amber-500/30 text-white rounded-tr-sm' 
-                            : 'bg-navy-card border-l-4 border-electric-blue text-slate-200 rounded-tl-sm'
-                        }`}
-                      >
+                      {/* ArenaIQ label above assistant messages */}
+                      {!isUser && (
+                        <span className="text-[10px] text-electric-blue font-bold mb-1 ml-1">ArenaIQ</span>
+                      )}
+
+                      {/* Bubble */}
+                      <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                        isUser
+                          ? 'bg-gold/15 border border-gold/30 text-white rounded-tr-sm'
+                          : 'bg-navy-card border-l-4 border-electric-blue text-slate-100 rounded-tl-sm'
+                      }`}>
                         <p className="whitespace-pre-line">{msg.text}</p>
                       </div>
+
+                      {/* Timestamp */}
                       {msg.timestamp && (
-                        <span className="text-xs text-slate-500 mt-1 px-1">{msg.timestamp}</span>
+                        <span className="text-[10px] text-slate-600 mt-1 px-1">{msg.timestamp}</span>
                       )}
                     </div>
 
+                    {/* User avatar */}
                     {isUser && (
-                      <span className="h-8 w-8 shrink-0 rounded-full bg-navy-card border border-navy-border flex items-center justify-center mb-5">
-                        <User className="h-4 w-4 text-slate-300" />
+                      <span className="h-7 w-7 shrink-0 rounded-full bg-navy-card border border-navy-border flex items-center justify-center mb-5">
+                        <User className="h-3.5 w-3.5 text-slate-400" />
                       </span>
                     )}
                   </div>
                 )
               })}
-              
+
+              {/* Typing indicator */}
               {sending && (
                 <div className="flex items-end gap-2">
-                  <span className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-tr from-gold to-yellow-500 flex items-center justify-center text-xs font-black text-navy-deep">
+                  <span className="h-7 w-7 shrink-0 rounded-full bg-gradient-to-tr from-gold to-yellow-500 flex items-center justify-center text-[10px] font-black text-navy-deep">
                     IQ
                   </span>
-                  <div className="bg-navy-card border-l-4 border-electric-blue rounded-2xl rounded-tl-sm px-4 py-3 flex items-center space-x-1.5">
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '0ms' }}></span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '150ms' }}></span>
-                    <span className="h-1.5 w-1.5 rounded-full bg-slate-400 animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  <div className="bg-navy-card border-l-4 border-electric-blue rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5">
+                    <span className="typing-dot" />
+                    <span className="typing-dot" />
+                    <span className="typing-dot" />
                   </div>
                 </div>
               )}
-              
+
               <div ref={messagesEndRef} />
-            </div>
+            </>
           )}
         </section>
 
-        {/* ── INPUT AREA ───────────────────────────────── */}
-        <div className="mt-4 shrink-0 space-y-2">
-          <form 
-            onSubmit={handleSendMessage} 
+        {/* ── INPUT AREA ────────────────────────────────── */}
+        <div className="px-4 sm:px-6 py-4 border-t border-navy-border bg-navy-card/60 backdrop-blur-md shrink-0 pb-20 md:pb-4">
+          <form
+            onSubmit={handleSendMessage}
             className="flex items-center gap-2"
             aria-label="Send message form"
           >
+            {/* Pill input */}
             <div className="relative flex-1">
               <input
+                ref={inputRef}
                 type="text"
                 value={inputMsg}
                 onChange={(e) => setInputMsg(e.target.value)}
-                placeholder="Ask anything about the stadium, matches, facilities..."
+                placeholder="Message ArenaIQ…"
                 disabled={sending}
                 required
                 aria-label="Type your message"
-                className="w-full rounded-xl border border-navy-border bg-navy-card/60 py-3 pl-4 pr-12 text-sm text-white placeholder-slate-500 focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold"
+                className="w-full rounded-full border border-navy-border bg-navy-deep py-3 pl-5 pr-4 text-sm text-white placeholder-slate-500 focus:border-gold focus:outline-hidden focus:ring-1 focus:ring-gold transition"
               />
             </div>
+
+            {/* Send button — gold circle */}
             <button
               type="submit"
               disabled={sending || !inputMsg.trim()}
-              className="p-3.5 rounded-xl bg-gold hover:bg-yellow-400 text-navy-deep transition disabled:opacity-50 focus:outline-hidden focus:ring-2 focus:ring-gold"
+              className="h-11 w-11 rounded-full bg-gold hover:bg-yellow-400 text-navy-deep flex items-center justify-center transition disabled:opacity-40 focus:outline-hidden focus:ring-2 focus:ring-gold shadow-[0_0_12px_rgba(245,197,24,0.3)]"
               aria-label="Send message"
             >
-              <ArrowRight className="h-5 w-5" />
+              <ArrowUp className="h-5 w-5" />
             </button>
           </form>
-          <p className="text-xs text-slate-500 text-center">
-            Powered by Gemini AI • Responds in your language
+
+          <p className="text-[10px] text-slate-600 text-center mt-2">
+            Responds in your language • Scoped to stadium ops
           </p>
         </div>
 
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-navy-border bg-navy-deep py-4 shrink-0 text-center text-[10px] text-slate-600">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
-          <p>© 2026 ArenaIQ AI Assistant.</p>
-          <div className="flex items-center space-x-1.5 text-emerald-500">
-            <Accessibility className="h-3.5 w-3.5" />
-            <span>WCAG 2.1 AA compliant keyboard layout</span>
-          </div>
-        </div>
-      </footer>
-
-    </div>
+      </div>
+    </AppShell>
   )
 }

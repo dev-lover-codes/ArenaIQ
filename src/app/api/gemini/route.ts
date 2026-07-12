@@ -49,6 +49,20 @@ export async function POST(request: Request) {
         const { message } = body
         const desc = `[Mock AI Assistant - ${language.toUpperCase()}] I received your message: "${message}". I can help with stadium schedules, concessions, and navigation. Need anything else? 🏟️`
         return NextResponse.json({ success: true, text: desc })
+      } else if (action === 'match_insight') {
+        const { homeTeam, awayTeam } = body
+        if (!homeTeam) return NextResponse.json({ success: false, error: 'homeTeam is required.' }, { status: 400 })
+        if (!awayTeam) return NextResponse.json({ success: false, error: 'awayTeam is required.' }, { status: 400 })
+        return NextResponse.json({ success: true, text: `[Mock Insight] ${homeTeam} vs ${awayTeam} — Tactical preview coming soon.` })
+      } else if (action === 'incident_response') {
+        const { type, zone, severity, description } = body
+        if (!type) return NextResponse.json({ success: false, error: 'type is required.' }, { status: 400 })
+        if (!zone) return NextResponse.json({ success: false, error: 'zone is required.' }, { status: 400 })
+        if (!severity) return NextResponse.json({ success: false, error: 'severity is required.' }, { status: 400 })
+        if (description && typeof description === 'string' && description.length > 500) {
+          return NextResponse.json({ success: false, error: 'description exceeds 500 characters.' }, { status: 400 })
+        }
+        return NextResponse.json({ success: true, text: `[Mock Protocol] 5-step response for ${type} incident at ${zone} (${severity}).` })
       }
       return NextResponse.json({ success: false, error: 'Unknown action type.' }, { status: 400 })
     }
@@ -148,6 +162,48 @@ Always end with: "Need anything else? 🏟️"`
       })
 
       const result = await chat.sendMessage(message)
+      return NextResponse.json({ success: true, text: result.response.text() })
+    }
+
+    if (action === 'match_insight') {
+      const { homeTeam, awayTeam } = body
+      if (!homeTeam) {
+        return NextResponse.json({ success: false, error: 'homeTeam is required.' }, { status: 400 })
+      }
+      if (!awayTeam) {
+        return NextResponse.json({ success: false, error: 'awayTeam is required.' }, { status: 400 })
+      }
+
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+      const prompt = `You are ArenaIQ tactical analyst for FIFA World Cup 2026. Provide a concise pre-match tactical insight for ${homeTeam} vs ${awayTeam}. Include: key players to watch, formation battle, and one bold prediction. Language: ${language}.`
+      const result = await model.generateContent(prompt)
+      return NextResponse.json({ success: true, text: result.response.text() })
+    }
+
+    if (action === 'incident_response') {
+      const { type, zone, severity, description } = body
+      if (!type) {
+        return NextResponse.json({ success: false, error: 'type is required.' }, { status: 400 })
+      }
+      if (!zone) {
+        return NextResponse.json({ success: false, error: 'zone is required.' }, { status: 400 })
+      }
+      if (!severity) {
+        return NextResponse.json({ success: false, error: 'severity is required.' }, { status: 400 })
+      }
+      if (description && typeof description === 'string' && description.length > 500) {
+        return NextResponse.json({ success: false, error: 'description exceeds 500 characters.' }, { status: 400 })
+      }
+
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+      const prompt = `You are ArenaIQ incident coordinator for FIFA World Cup 2026. Generate a clear 5-step response protocol for the following stadium incident:
+- Type: ${type}
+- Zone: ${zone}
+- Severity: ${severity}
+- Description: ${description || 'No additional details.'}
+
+Respond with exactly 5 numbered actionable steps for stadium staff. Language: ${language}.`
+      const result = await model.generateContent(prompt)
       return NextResponse.json({ success: true, text: result.response.text() })
     }
 

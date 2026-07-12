@@ -4,15 +4,12 @@ export const dynamic = 'force-dynamic'
 
 import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
+import AppShell from '@/components/layout/AppShell'
 import { 
-  Activity, 
   ListTodo, 
   LayoutGrid, 
   Megaphone, 
-  LogOut, 
-  Accessibility, 
   ShieldAlert, 
   Loader2, 
   Check, 
@@ -50,8 +47,6 @@ export default function StaffPage() {
   const supabase = createClient()
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user, setUser] = useState<any>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [profile, setProfile] = useState<any>(null)
   const [zones, setZones] = useState<Zone[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
@@ -75,7 +70,6 @@ export default function StaffPage() {
         router.push('/login')
         return
       }
-      setUser(user)
 
       // Fetch user profile to check role
       const { data: profileData, error: profileErr } = await supabase
@@ -166,11 +160,7 @@ export default function StaffPage() {
     }
   }, [profile, supabase])
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    router.refresh()
-    router.push('/login')
-  }
+
 
   // Update Zone Status in database
   const updateZoneStatus = async (zoneId: string, status: 'open' | 'crowded' | 'closed') => {
@@ -234,71 +224,24 @@ export default function StaffPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-white">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
-      </div>
+      <AppShell title="Staff Ops">
+        <div className="flex min-h-full items-center justify-center py-32">
+          <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+        </div>
+      </AppShell>
     )
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-slate-100 font-sans">
+    <AppShell title="Staff Ops">
       
       {/* Screen Reader Live announcements */}
       <div className="sr-only" aria-live="assertive" aria-atomic="true">
         {liveAnnouncement}
       </div>
 
-      {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/60 backdrop-blur-md sticky top-0 z-50 shrink-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            
-            <div className="flex items-center space-x-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-tr from-emerald-500 to-teal-500">
-                <Activity className="h-5 w-5 text-white" />
-              </span>
-              <span className="text-xl font-bold tracking-tight text-white">
-                Arena<span className="text-emerald-400">IQ</span>
-              </span>
-            </div>
-
-            {/* Navigation links */}
-            <nav className="hidden md:flex space-x-1" aria-label="Main Navigation">
-              <Link href="/dashboard" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800">
-                Heatmap Dashboard
-              </Link>
-              <Link href="/navigate" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800">
-                Smart Route Planner
-              </Link>
-              <Link href="/assistant" className="px-3 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-zinc-800">
-                Multilingual AI Assistant
-              </Link>
-              <Link href="/staff" className="px-3 py-2 rounded-lg text-sm font-semibold bg-zinc-800 text-emerald-400 border border-zinc-700" aria-current="page">
-                Staff Panel
-              </Link>
-            </nav>
-
-            <div className="flex items-center space-x-4">
-              <div className="flex flex-col text-right">
-                <span className="text-xs text-red-400 uppercase tracking-widest font-bold">Command Mode</span>
-                <span className="text-sm font-semibold text-slate-200">{user?.email}</span>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-lg border border-red-500/30 text-red-400 hover:bg-red-500/10 text-sm font-semibold transition focus:outline-hidden focus:ring-2 focus:ring-red-500"
-                aria-label="Sign out of operations dashboard"
-              >
-                <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </button>
-            </div>
-
-          </div>
-        </div>
-      </header>
-
       {/* Main Staff Container */}
-      <main role="main" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 pb-20 md:pb-8">
         
         {/* Banner */}
         <div>
@@ -531,19 +474,7 @@ export default function StaffPage() {
 
         </div>
 
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-zinc-850 bg-zinc-950 py-6 mt-16 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p>© 2026 FIFA World Cup ArenaIQ. Staff Command Portal.</p>
-          <div className="flex items-center space-x-1.5 text-red-500">
-            <Accessibility className="h-4 w-4" />
-            <span>Operational High Contrast Theme Active</span>
-          </div>
-        </div>
-      </footer>
-
-    </div>
+      </div>
+    </AppShell>
   )
 }

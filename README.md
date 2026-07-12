@@ -6,6 +6,30 @@ ArenaIQ is a **GenAI-powered smart stadium platform for FIFA World Cup 2026 that
 
 ---
 
+### New Features Added
+- **Match Schedule** (`/matches`): 8 FIFA WC 2026 fixtures with AI tactical insights powered by Gemini (`match_insight` action)
+- **Incident Response** (`/staff`): AI-generated 5-step response protocols for stadium incidents (`incident_response` action)
+- **Fan Onboarding** (`/onboarding`): 3-step first-time setup for role, language, and home gate
+
+### Total Routes
+
+| Route | Description |
+|-------|-------------|
+| `/` | Landing page — ArenaIQ hero, features, and call-to-action |
+| `/login` | Authentication — Supabase-powered sign in / sign up |
+| `/dashboard` | Live crowd heatmap with real-time Supabase Realtime updates |
+| `/navigate` | Dijkstra-powered fan wayfinding with AI step descriptions |
+| `/assistant` | Multilingual Gemini chat assistant (6 languages) |
+| `/staff` | Staff command center — tasks, zone status, incident response |
+| `/matches` | FIFA WC 2026 fixtures with Gemini tactical insights |
+| `/onboarding` | 3-step fan onboarding (role, language, home gate) |
+| `/api/gemini` | Secure server-side Gemini AI gateway |
+| `/api/navigate` | Dijkstra routing API with zone graph computation |
+| `/api/chat` | Persistent chat session API with Supabase storage |
+| `/api/simulate-crowd` | Crowd movement simulation endpoint |
+
+---
+
 ## 📋 Project Purpose & Overview
 ArenaIQ is built to address the extreme operational challenges of a FIFA World Cup stadium. On matchdays, over 80,000 international fans navigate concourses, concessions, and seating gates. Real-time bottlenecks, multilingual communication gaps, and security coordination are key stress points. ArenaIQ addresses these using a combination of **Generative AI** (for contextual, natural translation and guidance) and **Deterministic Algorithms** (for reliable path calculation).
 

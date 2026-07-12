@@ -166,3 +166,58 @@ input:checked + .toggle-slider:before {
   transform: translateX(20px);
   background: #0a0f1e;
 }
+
+/* ─── Card Styles ─────────────────────────────────── */
+.arena-card {
+  background: #12192c;
+  border: 1px solid #1e294b;
+  border-radius: 16px;
+  padding: 24px;
+}
+.arena-card-sm {
+  background: #12192c;
+  border: 1px solid #1e294b;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+/* ─── Status Colors ───────────────────────────────── */
+.status-open     { color: #10b981; background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); }
+.status-crowded  { color: #f59e0b; background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); }
+.status-closed   { color: #ef4444; background: rgba(239,68,68,0.1);  border-color: rgba(239,68,68,0.3); }
+.status-critical { color: #ef4444; background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); }
+
+/* ─── Gold Number Display ─────────────────────────── */
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #f5c518;
+  line-height: 1;
+}
+
+/* ─── Section Heading ─────────────────────────────── */
+.section-heading {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 12px;
+}
+
+/* ─── Animated typing dots ────────────────────────── */
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%            { transform: translateY(-4px); opacity: 1; }
+}
+.typing-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00a8e8;
+  animation: typing-dot 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
