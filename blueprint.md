@@ -123,4 +123,47 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
   * `utils.extended.test.ts` rewritten: 27 tests covering every branch of `cn()`, `formatOccupancy()`, and `getDensityLevel()`.
   * `api.test.ts` created (new): 13 targeted API validation tests covering missing/invalid inputs for all four API routes with full Supabase + Gemini mocks.
 
+### 11. FIFA World Cup 2026 Mission Control UI Redesign (Phase 7)
+**Scope**: Visual/CSS-only overhaul across 4 pages + globals.css. Zero logic, API, Supabase query, or TypeScript changes.
+
+**Design Concept**: "Mission Control meets World Cup Stadium"
+* **Color System**: Deep navy `#0a0f1e` base, Gold `#f5c518` as PRIMARY accent (used aggressively), Electric blue `#00a8e8` for live/realtime data, Emerald `#10b981` for safe/open, Red `#ef4444` for critical.
+
+**globals.css additions**:
+* Utility classes: `.text-gold`, `.bg-gold`, `.border-gold`, `.text-electric-blue`, `.glow-gold`, `.glow-blue`
+* Full CSS `.toggle-switch` / `.toggle-slider` component for wheelchair accessibility toggle
+
+**Landing Page (`/`)**:
+* Added animated `LIVE` badge (red pulse) to ArenaIQ logo in header
+* Added `MATCHDAY ACTIVE` strip with pulsing electric-blue dot above the hero
+* Made "FIFA World Cup 2026" line at `text-5xl sm:text-8xl` in gold, almost full width
+* Added 4-column stats grid: 80K Fans / 14 Zones / 6 Languages / Gemini AI
+* Feature cards: gold `border-l-4` always visible, watermark `01/02/03` numbers in top-right corner (`text-6xl opacity-10`), `hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)]`
+
+**Dashboard (`/dashboard`)**:
+* Command Center header: left = logo + "COMMAND CENTER" in electric blue; center = "MATCHDAY OPERATIONS — LIVE" with pulsing red dot; right = role badge + logout
+* Scoreboard match card: `MEXICO 2 — 1 USA` in `text-5xl` gold font-black, "ESTADIO AZTECA • 80'" in electric blue, gold glow shadow
+* Zone cards completely restyled: horizontal layout, 8px left colored indicator bar, `X,XXX / Y,XXX` occupancy text, `text-2xl font-black` percentage on right, progress bar, status badge
+* Simulate button: full-width gold background, `⚡ Simulate Crowd Movement` with Zap icon, black text, font-black
+
+**Navigate (`/navigate`)**:
+* Large gold `FIND YOUR ROUTE` heading (`text-4xl sm:text-5xl font-black`)
+* FROM / TO selectors with electric-blue/gold labels, zone name preview card below each select
+* Flag emoji displayed inline next to language selector
+* Wheelchair toggle replaced with proper CSS `.toggle-switch` component
+* Calculate Route button: large, full-width gold with ArrowRight icon
+* Route result: `~X MIN WALK` in `text-3xl font-black` gold, step numbers in gold circles, congestion as `⚠️` red alert banner, "Why this route?" in electric-blue text, accessibility note in teal card
+
+**Assistant (`/assistant`)**:
+* Header: `ArenaIQ ASSISTANT` with flag emoji + language selector inline in a bordered pill
+* User messages: amber/gold background (`bg-amber-500/20`), right-aligned, `rounded-tr-sm`
+* Assistant messages: navy-card background with electric-blue `border-l-4`, `rounded-tl-sm`
+* Timestamps on each message in `text-xs text-slate-500`
+* Send button: gold background, ArrowRight icon
+* Footer under input: "Powered by Gemini AI • Responds in your language"
+
+**Build**: ✅ Zero errors — 14 routes compiled (Next.js 16.2.4 Turbopack, 17.5s)
+**Tests**: ✅ 98/98 passed across 10 test files (no logic changed)
+**ESLint**: ✅ 0 warnings, 0 errors (`--max-warnings=0`)
+**Commit**: `3b5751d` pushed to `origin/main`
 
