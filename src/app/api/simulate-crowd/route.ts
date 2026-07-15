@@ -1,12 +1,15 @@
-import { NextResponse } from 'next/server'
-import { createServerClient as createServerSupabase } from '@supabase/ssr'
+import { NextRequest, NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
 
 // Create a custom admin-level client that uses the service role key to bypass RLS for simulation updates
 function createAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! // fallback to anon if service role isn't set in dev
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseServiceKey) {
+    return null
+  }
 
-  return createServerSupabase(
+  return createServerClient(
     supabaseUrl,
     supabaseServiceKey,
     {
@@ -18,9 +21,25 @@ function createAdminClient() {
   )
 }
 
-export async function GET() {
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  // Authorization check — only staff/admin should trigger crowd simulation
+  const authHeader = request.headers.get('authorization')
+  const adminSecret = process.env.ADMIN_SECRET
+  if (adminSecret && authHeader !== `Bearer ${adminSecret}`) {
+    return NextResponse.json(
+      { success: false, error: 'Unauthorized.' },
+      { status: 401 }
+    )
+  }
+
   try {
     const supabase = createAdminClient()
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, error: 'Server configuration error.' },
+        { status: 500 }
+      )
+    }
 
     // 1. Fetch current zones
     const { data: zones, error: fetchErr } = await supabase

@@ -149,7 +149,14 @@ export default function DashboardPage() {
     <AppShell title="Command Center">
 
       {/* Accessibility Announcement */}
-      <div className="sr-only" aria-live="polite" aria-atomic="true">{liveAnnouncement}</div>
+      <div
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+        id="density-announcer"
+      >
+        {liveAnnouncement}
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pb-24 md:pb-10 space-y-8">
 

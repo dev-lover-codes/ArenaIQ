@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #0a0f1e;
@@ -14,15 +16,7 @@
   --color-navy-border: #1e294b;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-gold: var(--color-gold);
-  --color-electric-blue: var(--color-electric-blue);
-  --color-navy-deep: var(--color-navy-deep);
-  --color-navy-card: var(--color-navy-card);
-  --color-navy-border: var(--color-navy-border);
-}
+
 
 body {
   background-color: var(--background);

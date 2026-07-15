@@ -291,7 +291,7 @@ export default function NavigatePage() {
         )}
 
         {routeResult?.success && (
-          <div className="mt-8 space-y-5">
+          <div className="mt-8 space-y-5" aria-live="polite" aria-label="Route result">
 
             {/* OPTIMAL ROUTE FOUND header */}
             <div className="arena-card border-emerald-500/30" style={{ borderColor: 'rgba(16,185,129,0.3)' }}>

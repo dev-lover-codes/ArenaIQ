@@ -1,4 +1,5 @@
 import { expect, test, describe, vi, beforeEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { POST as geminiPOST } from '../app/api/gemini/route'
 import { POST as navigatePOST } from '../app/api/navigate/route'
 import { POST as chatPOST } from '../app/api/chat/route'
@@ -217,7 +218,7 @@ describe('Extended API Route Handlers', () => {
 
   describe('/api/simulate-crowd', () => {
     test('returns success:true structure', async () => {
-      const response = await simulateGET()
+      const response = await simulateGET(new NextRequest('http://localhost/api/simulate-crowd'))
       expect(response.status).toBe(200)
       const data = await response.json()
       expect(data.success).toBe(true)

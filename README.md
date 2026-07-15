@@ -6,7 +6,29 @@ ArenaIQ is a **GenAI-powered smart stadium platform for FIFA World Cup 2026 that
 
 ---
 
-### New Features Added
+## 🎯 PRIMARY PERSONA & AI REASONING LOOP
+
+> This section maps ArenaIQ directly to the challenge brief's **Input → Reasoning → Action** design pattern.
+
+**PRIMARY PERSONA: Volunteer** (manages a zone of ~4,000 fans on matchday)
+
+| Stage | Description |
+|-------|-------------|
+| **INPUT** | Fan query (text/voice) + live zone density data from Supabase Realtime |
+| **REASONING** | Gemini 1.5 Flash detects urgency level (LOW/MEDIUM/HIGH/CRITICAL), language, and situational context |
+| **ACTION** | Multilingual response delivered to volunteer + optional PA announcement script + security escalation flag |
+
+### Volunteer Co-pilot Mode (`/assistant` → toggle "VOLUNTEER")
+When a volunteer activates Co-pilot mode, the AI system prompt changes to:
+- Detect urgency of every fan situation (crush risk, medical emergency, lost child, routine query)
+- Return a structured JSON payload with `response`, `announcement`, `urgency`, `escalate`, and `reason`
+- Generate a ready-to-read PA announcement in the volunteer's chosen language
+- Flag when to call security (`escalate: true`)
+
+This is a **deep, single-persona loop** — not a "wide but thin" general assistant. Every interaction produces a decision-quality output a real volunteer can act on immediately.
+
+---
+
 - **Match Schedule** (`/matches`): 8 FIFA WC 2026 fixtures with AI tactical insights powered by Gemini (`match_insight` action)
 - **Incident Response** (`/staff`): AI-generated 5-step response protocols for stadium incidents (`incident_response` action)
 - **Fan Onboarding** (`/onboarding`): 3-step first-time setup for role, language, and home gate

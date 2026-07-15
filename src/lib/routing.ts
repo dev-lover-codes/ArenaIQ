@@ -15,16 +15,24 @@ export interface Zone {
 }
 
 export interface RouteResult {
-  path: string[]        // List of zone IDs
-  totalTime: number     // Total walk time in seconds (including penalties)
-  rawTime: number       // Raw physical walk time in seconds
+  path: string[]           // List of zone IDs
+  totalTime: number        // Total walk time in seconds (including penalties)
+  rawTime: number          // Raw physical walk time in seconds
   congestedZones: string[] // List of crowded zones traversed
 }
 
 /**
- * Computes the optimal path between two zones using Dijkstra's algorithm.
- * Accounts for crowded zones by applying a traversal penalty, and avoids closed zones.
- * When wheelchairMode is true, edges where is_step_free === false are skipped entirely.
+ * Calculates the optimal route between two stadium zones using Dijkstra's algorithm.
+ * Accounts for crowded zones by applying a traversal penalty (3×), and avoids
+ * closed zones entirely. In wheelchair mode, edges where `is_step_free === false`
+ * are skipped.
+ *
+ * @param zones - Array of stadium zones with id, name, and occupancy status
+ * @param edges - Array of bidirectional connections between zones
+ * @param startId - The ID of the starting zone
+ * @param endId - The ID of the destination zone
+ * @param wheelchairMode - When true, only step-free edges are traversed
+ * @returns A RouteResult with the optimal path, or null if no path exists
  */
 export function calculateRoute(
   zones: Zone[],

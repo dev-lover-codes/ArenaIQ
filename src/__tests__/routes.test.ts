@@ -39,6 +39,8 @@ vi.mock('@supabase/ssr', () => {
 describe('API Route Handlers', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    // Ensure security checks pass in test environment
+    vi.stubEnv('SUPABASE_SERVICE_ROLE_KEY', 'test-service-role-key')
     
     // Mock global fetch for navigate routing API calls to gemini API
     global.fetch = vi.fn().mockImplementation(() =>

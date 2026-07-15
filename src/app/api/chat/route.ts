@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
-    const { message, sessionId, language = 'en' } = await request.json()
+    const { message, sessionId, language = 'en', volunteerMode = false } = await request.json()
 
     if (!message) {
       return NextResponse.json({ success: false, error: 'Message is required.' }, { status: 400 })
@@ -44,10 +44,9 @@ export async function POST(request: Request) {
       const origin = new URL(request.url).origin
       
       // Map message history to simple objects for Gemini gateway
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const history = messagesList.slice(0, -1).map((m: any) => ({
+      const history = messagesList.slice(0, -1).map((m) => ({
         role: m.role,
-        text: m.parts?.[0]?.text || m.text || ''
+        text: m.parts?.[0]?.text || ''
       }))
 
       const geminiRes = await fetch(`${origin}/api/gemini`, {
@@ -57,7 +56,8 @@ export async function POST(request: Request) {
           action: 'chat',
           language,
           message,
-          history
+          history,
+          volunteerMode,
         })
       })
 

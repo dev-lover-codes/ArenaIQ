@@ -1,7 +1,31 @@
 import { NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-export async function POST(request: Request) {
+const getAllowedOrigin = () =>
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://arenaiq.vercel.app'
+
+export async function OPTIONS(): Promise<NextResponse> {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': getAllowedOrigin(),
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  })
+}
+
+export async function POST(request: Request): Promise<NextResponse> {
+  const origin = request.headers.get('origin')
+  const allowedOrigin = getAllowedOrigin()
+  // Block cross-origin requests from unknown origins (allow null/same-origin server-to-server calls)
+  if (origin && origin !== allowedOrigin) {
+    return NextResponse.json(
+      { success: false, error: 'Forbidden.' },
+      { status: 403 }
+    )
+  }
+
   try {
     const body = await request.json()
     const { action, language = 'en' } = body
@@ -46,7 +70,17 @@ export async function POST(request: Request) {
         }
         return NextResponse.json({ success: true, text: JSON.stringify(mockJson) })
       } else if (action === 'chat') {
-        const { message } = body
+        const { message, volunteerMode: vm } = body
+        if (vm) {
+          const mockCopilot = JSON.stringify({
+            response: `[Volunteer Co-pilot] Received: "${message}". Fan query acknowledged. Please check zone density and respond calmly.`,
+            announcement: `Attention stadium guests in your zone: assistance is available. Please remain calm and follow volunteer instructions.`,
+            urgency: 'LOW',
+            escalate: false,
+            reason: 'Mock response — no real AI key configured'
+          })
+          return NextResponse.json({ success: true, text: mockCopilot })
+        }
         const desc = `[Mock AI Assistant - ${language.toUpperCase()}] I received your message: "${message}". I can help with stadium schedules, concessions, and navigation. Need anything else? 🏟️`
         return NextResponse.json({ success: true, text: desc })
       } else if (action === 'match_insight') {
@@ -128,9 +162,30 @@ Respond ONLY in JSON matching the example format. Language for step text: "${lan
     }
 
     if (action === 'chat') {
-      const { message, history = [] } = body
+      const { message, history = [], volunteerMode: vm = false } = body
 
-      const systemInstruction = `You are ArenaIQ, the official FIFA World Cup 2026 AI assistant. You ONLY answer questions about: stadium navigation, match schedules, facilities, food, security, medical, and accessibility. You detect urgency in tone.
+      const volunteerSystemInstruction = `You are ArenaIQ co-pilot for a FIFA World Cup 2026 volunteer. The volunteer is managing a zone with potentially 4,000 fans. Help them:
+- Answer multilingual fan queries
+- Generate crowd announcements to read aloud
+- Identify urgency levels (LOW/MEDIUM/HIGH/CRITICAL)
+- Suggest when to escalate to security
+
+For each response, output ONLY valid JSON in this exact format (no prose outside the JSON):
+{
+  "response": "text to say to the fan (in ${language})",
+  "announcement": "optional PA announcement text (in ${language}, or null if not needed)",
+  "urgency": "LOW|MEDIUM|HIGH|CRITICAL",
+  "escalate": true|false,
+  "reason": "brief explanation of urgency level"
+}
+
+URGENCY GUIDELINES:
+- LOW: routine questions (directions, facilities, schedules)
+- MEDIUM: mild distress, lost children (not yet found), minor conflicts
+- HIGH: medical symptoms, aggressive behaviour, large lost group
+- CRITICAL: medical emergency, fight, security threat, crush risk`
+
+      const standardSystemInstruction = `You are ArenaIQ, the official FIFA World Cup 2026 AI assistant. You ONLY answer questions about: stadium navigation, match schedules, facilities, food, security, medical, and accessibility. You detect urgency in tone.
 
 FEW-SHOT BEHAVIOR EXAMPLES:
 - User: "where bathroom" → Brief, direct directions
@@ -142,6 +197,8 @@ For non-stadium queries respond: "I can only assist with FIFA World Cup 2026 sta
 
 Always respond in: ${language}
 Always end with: "Need anything else? 🏟️"`
+
+      const systemInstruction = vm ? volunteerSystemInstruction : standardSystemInstruction
 
       const model = genAI.getGenerativeModel({
         model: 'gemini-1.5-flash',
@@ -157,7 +214,8 @@ Always end with: "Need anything else? 🏟️"`
       const chat = model.startChat({
         history: formattedHistory,
         generationConfig: {
-          maxOutputTokens: 250,
+          maxOutputTokens: vm ? 400 : 250,
+          ...(vm ? { responseMimeType: 'application/json' } : {})
         }
       })
 

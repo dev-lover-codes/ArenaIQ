@@ -2,6 +2,7 @@
  * api.test.ts — targeted API validation tests (mocked Supabase + fetch)
  */
 import { expect, test, describe, vi, beforeEach } from 'vitest'
+import { NextRequest } from 'next/server'
 import { POST as geminiPOST } from '../app/api/gemini/route'
 import { POST as navigatePOST } from '../app/api/navigate/route'
 import { POST as chatPOST } from '../app/api/chat/route'
@@ -208,7 +209,7 @@ describe('POST /api/chat', () => {
 
 describe('GET /api/simulate-crowd', () => {
   test('returns { success: true } with zones_updated count', async () => {
-    const res = await simulateGET()
+    const res = await simulateGET(new NextRequest('http://localhost/api/simulate-crowd'))
     expect(res.status).toBe(200)
     const d = await res.json()
     expect(d.success).toBe(true)

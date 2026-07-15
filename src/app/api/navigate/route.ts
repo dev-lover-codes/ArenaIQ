@@ -4,8 +4,11 @@ import { calculateRoute, Zone, Edge } from '@/lib/routing'
 
 function createAdminClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseServiceKey) {
+    return null
+  }
+
   return createServerClient(supabaseUrl, supabaseServiceKey, {
     cookies: {
       getAll() { return [] },
@@ -14,7 +17,7 @@ function createAdminClient() {
   })
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { startZone, endZone, language = 'en', wheelchairMode = false } = await request.json()
 
@@ -23,6 +26,12 @@ export async function POST(request: Request) {
     }
 
     const supabase = createAdminClient()
+    if (!supabase) {
+      return NextResponse.json(
+        { success: false, error: 'Server configuration error.' },
+        { status: 500 }
+      )
+    }
 
     // 1. Fetch zones and edges
     const [zonesRes, edgesRes] = await Promise.all([
