@@ -1,10 +1,34 @@
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
-import { expect, test, vi, describe } from 'vitest'
+import { expect, test, vi, describe, it } from 'vitest'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { NavigationForm } from '../components/navigation-form'
 import { ChatInterface } from '../components/chat-interface'
+import { ErrorBoundary } from '../components/ErrorBoundary'
+
+describe('ErrorBoundary', () => {
+  it('renders children when no error', () => {
+    render(
+      <ErrorBoundary>
+        <div>Safe content</div>
+      </ErrorBoundary>
+    )
+    expect(screen.getByText('Safe content')).toBeInTheDocument()
+  })
+
+  it('renders fallback on error', () => {
+    const ThrowError = () => { throw new Error('Test error') }
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {})
+    render(
+      <ErrorBoundary>
+        <ThrowError />
+      </ErrorBoundary>
+    )
+    expect(screen.getByRole('alert')).toBeInTheDocument()
+    spy.mockRestore()
+  })
+})
 
 describe('UI Primitives Components - Extended', () => {
   describe('Button component', () => {

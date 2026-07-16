@@ -4,7 +4,7 @@ export const dynamic = 'force-dynamic'
 
 import AppShell from '@/components/layout/AppShell'
 import { Trophy } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { MATCHES, type Match } from '@/lib/data/matches'
 
 const FILTER_TABS = ['ALL', 'LIVE', 'UPCOMING', 'COMPLETED'] as const
@@ -65,9 +65,12 @@ function MatchCard({ match }: { match: Match }) {
 export default function MatchesPage() {
   const [activeFilter, setActiveFilter] = useState<FilterTab>('ALL')
 
-  const filtered = activeFilter === 'ALL'
-    ? MATCHES
-    : MATCHES.filter(m => m.status === activeFilter)
+  const filteredMatches = useMemo(() => 
+    activeFilter === 'ALL' 
+      ? MATCHES 
+      : MATCHES.filter(m => m.status === activeFilter),
+    [activeFilter]
+  )
 
   return (
     <AppShell title="Matches">
@@ -110,11 +113,11 @@ export default function MatchesPage() {
         </div>
 
         {/* Match Cards */}
-        {filtered.length === 0 ? (
+        {filteredMatches.length === 0 ? (
           <p className="text-center text-slate-500 py-12">No {activeFilter.toLowerCase()} matches.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {filtered.map(match => (
+            {filteredMatches.map(match => (
               <MatchCard key={match.id} match={match} />
             ))}
           </div>

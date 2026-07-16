@@ -58,15 +58,23 @@ function LiveClock() {
   )
 }
 
+interface SupabaseUser {
+  id: string
+  email?: string
+}
+
+interface UserProfile {
+  role?: string
+  full_name?: string
+}
+
 export default function AppShell({ children, title }: AppShellProps) {
   const pathname = usePathname()
   const router   = useRouter()
   const supabase = createClient()
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [user,    setUser]    = useState<any>(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [profile, setProfile] = useState<any>(null)
+  const [user,    setUser]    = useState<SupabaseUser | null>(null)
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -222,12 +230,13 @@ export default function AppShell({ children, title }: AppShellProps) {
         )}
 
         {/* Page content */}
-        <main role="main" className="flex-1">
+        <main role="main" aria-label="Main content" className="flex-1">
           {children}
         </main>
 
         {/* ── MOBILE BOTTOM TAB BAR ────────────────────── */}
         <nav
+          role="navigation"
           className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-navy-border bg-navy-card/95 backdrop-blur-xl h-16 px-1"
           aria-label="Mobile navigation"
         >

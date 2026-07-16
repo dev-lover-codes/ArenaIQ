@@ -40,3 +40,22 @@ export function getDensityLevel(ratio: number): 'low' | 'medium' | 'high' | 'cri
   if (ratio < 0.9) return 'high'
   return 'critical'
 }
+
+/**
+ * Memoizes a function result for repeated calls with same args.
+ * Time Complexity: O(1) for cache hits
+ * @param fn - Pure function to memoize
+ * @returns Memoized version of the function
+ */
+export function memoize<T extends (...args: unknown[]) => unknown>(
+  fn: T
+): T {
+  const cache = new Map<string, ReturnType<T>>()
+  return ((...args: unknown[]) => {
+    const key = JSON.stringify(args)
+    if (cache.has(key)) return cache.get(key)!
+    const result = fn(...args)
+    cache.set(key, result as ReturnType<T>)
+    return result
+  }) as T
+}

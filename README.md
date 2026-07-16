@@ -1,10 +1,49 @@
-# ArenaIQ — GenAI Stadium Operations for FIFA World Cup 2026™
+## ArenaIQ — FIFA World Cup 2026 Volunteer Co-pilot
 
-Built for the **Hack2Skill PromptWars Challenge 4**.
+**Primary Persona:** Stadium volunteer managing a zone of 4,000 fans
 
-ArenaIQ is a **GenAI-powered smart stadium platform for FIFA World Cup 2026 that enables real-time crowd management, AI-driven fan navigation, multi-language assistance, and staff coordination**. It provides a fully accessible command center and user experience tailored for fans, volunteers, venue staff, and tournament organizers.
+### The Problem
+A 19-year-old volunteer with a megaphone faces 4,000 fans 
+speaking 20+ languages. A fan is distressed. Is it a minor 
+inconvenience or a medical emergency? The volunteer needs 
+an AI co-pilot in real time.
+
+### Input → Reasoning → Action
+
+| Stage | What Happens |
+|-------|-------------|
+| **INPUT** | Fan query enters the assistant + live zone density from Supabase Realtime |
+| **REASONING** | Gemini detects urgency (LOW/MEDIUM/HIGH/CRITICAL), identifies language, determines if security escalation is needed |
+| **ACTION** | Returns: (1) response to say to the fan, (2) PA announcement script, (3) escalation flag |
+
+### Why This Architecture
+- Dijkstra computes routes — Gemini only explains them (prevents hallucination)
+- JSON-forced output ensures machine-readable AI responses
+- System prompt restricts Gemini to stadium domain only
+- Volunteer mode uses structured JSON output for consistent urgency detection
+- Wheelchair routing as first-class accessibility feature
+
+## Prompt Engineering Strategy
+
+### Navigate Prompt Design
+- Few-shot examples anchor the JSON output format
+- Real Dijkstra path passed as context (AI explains, not decides)
+- Congestion data included so AI warns fans proactively
+- responseMimeType: 'application/json' enforces structure
+
+### Volunteer Co-pilot Prompt Design  
+- Strict JSON schema with urgency enum (LOW/MEDIUM/HIGH/CRITICAL)
+- escalate boolean for clear action trigger
+- Language parameter ensures multilingual PA announcements
+- maxOutputTokens: 400 keeps responses concise for real-time use
+
+### Chat Prompt Design
+- System instruction scopes to stadium domain only
+- Few-shot examples prime urgency detection
+- Conversation history passed for contextual responses
 
 ---
+
 
 ## 🎯 PRIMARY PERSONA & AI REASONING LOOP
 

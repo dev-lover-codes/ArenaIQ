@@ -5,9 +5,19 @@ module.exports = {
     'next/typescript',
   ],
   rules: {
-    // Warn on any types but don't error — explicit-any suppressions allowed
-    '@typescript-eslint/no-explicit-any': 'warn',
-    // Allow unused vars prefixed with _ (e.g. _unused)
-    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+    // Error on any types
+    '@typescript-eslint/no-explicit-any': 'error',
+    // Error on unused vars (allow _ prefix pattern)
+    '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
   },
+  overrides: [
+    {
+      // Test type declaration files use empty interfaces intentionally (to merge types)
+      files: ['src/__tests__/*.d.ts'],
+      rules: {
+        '@typescript-eslint/no-empty-object-type': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+      },
+    },
+  ],
 }

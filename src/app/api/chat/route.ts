@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { sanitizeInput } from '@/lib/sanitize'
 
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { message, sessionId, language = 'en', volunteerMode = false } = await request.json()
 
-    if (!message) {
+    const cleanMessage = sanitizeInput(message, 2000)
+    if (!cleanMessage) {
       return NextResponse.json({ success: false, error: 'Message is required.' }, { status: 400 })
     }
 
@@ -35,7 +37,7 @@ export async function POST(request: Request): Promise<NextResponse> {
 
     // Append new user message in the correct format for Gemini's history:
     // { role: "user" | "model", parts: [{ text: "..." }] }
-    const newUserMsg = { role: 'user' as const, parts: [{ text: message }] }
+    const newUserMsg = { role: 'user' as const, parts: [{ text: cleanMessage }] }
     messagesList.push(newUserMsg)
 
     // 3. Call centralized /api/gemini
@@ -55,7 +57,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         body: JSON.stringify({
           action: 'chat',
           language,
-          message,
+          message: cleanMessage,
           history,
           volunteerMode,
         })
@@ -69,7 +71,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       }
     } catch (err) {
       console.error('Chat API Error:', err)
-      assistantReply = `[AI Assistant - ${language.toUpperCase()}] I received your query: "${message}". Let me know if you need directions or crowd status updates!`
+      assistantReply = `[AI Assistant - ${language.toUpperCase()}] I received your query: "${cleanMessage}". Let me know if you need directions or crowd status updates!`
     }
 
     // Append model reply to messages list

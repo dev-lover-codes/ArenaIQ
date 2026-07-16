@@ -22,6 +22,10 @@ export interface RouteResult {
 }
 
 /**
+ * Time Complexity: O((V + E) log V) using a min-priority queue
+ * Space Complexity: O(V) for distances and visited maps
+ * where V = number of zones, E = number of edges
+ *
  * Calculates the optimal route between two stadium zones using Dijkstra's algorithm.
  * Accounts for crowded zones by applying a traversal penalty (3×), and avoids
  * closed zones entirely. In wheelchair mode, edges where `is_step_free === false`

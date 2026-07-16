@@ -1,10 +1,10 @@
 import React from 'react'
 import Link from 'next/link'
-import { Shield, ArrowRight, Map, Users, Languages, Accessibility } from 'lucide-react'
+import { Shield, ArrowRight, Map, Users, Languages, Accessibility, Target } from 'lucide-react'
 
 export default function Home() {
   return (
-    <main role="main" className="flex min-h-screen flex-col bg-navy-deep text-slate-100 font-sans stadium-grid">
+    <main role="main" aria-label="ArenaIQ landing page" className="flex min-h-screen flex-col bg-navy-deep text-slate-100 font-sans stadium-grid">
       
       {/* Header */}
       <header className="border-b border-navy-border bg-navy-deep/80 backdrop-blur-md sticky top-0 z-50">
@@ -61,7 +61,7 @@ export default function Home() {
           </h1>
           
           <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-400 leading-relaxed">
-            ArenaIQ leverages Generative AI and real-time spatial graph routing to streamline navigation, manage crowd densities, and provide instant multilingual support.
+            ArenaIQ is the AI co-pilot for FIFA World Cup 2026 volunteers — detecting fan urgency, generating multilingual PA announcements, and preventing crowd incidents before they happen.
           </p>
 
           {/* 4-column Stats Grid */}
@@ -88,6 +88,7 @@ export default function Home() {
             <Link
               href="/login"
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-gold text-navy-deep font-bold hover:bg-yellow-400 transition-all shadow-[0_0_20px_rgba(255,215,0,0.2)] focus:outline-hidden focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-navy-deep"
+              aria-label="Sign in to ArenaIQ Command Center"
             >
               Sign In to Command Center
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -95,6 +96,7 @@ export default function Home() {
             <Link
               href="/login"
               className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-navy-border bg-navy-card text-base font-semibold text-slate-300 hover:text-white hover:border-gold transition focus:outline-hidden focus:ring-2 focus:ring-slate-500"
+              aria-label="Register your operations profile with ArenaIQ"
             >
               Register Operations Profile
             </Link>
@@ -146,7 +148,7 @@ export default function Home() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             
-            <div className="relative bg-navy-card/40 border border-navy-border border-l-4 border-l-gold p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)] overflow-hidden">
+            <div aria-label="Feature: Smart Navigation" className="relative bg-navy-card/40 border border-navy-border border-l-4 border-l-gold p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)] overflow-hidden">
               <span className="absolute top-3 right-4 text-6xl font-black text-white opacity-10 select-none pointer-events-none leading-none">01</span>
               <span className="p-4 rounded-xl bg-gold/10 text-gold border border-gold/20">
                 <Map className="h-6 w-6" />
@@ -157,7 +159,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="relative bg-navy-card/40 border border-navy-border border-l-4 border-l-gold p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)] overflow-hidden">
+            <div aria-label="Feature: Crowd Management" className="relative bg-navy-card/40 border border-navy-border border-l-4 border-l-gold p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)] overflow-hidden">
               <span className="absolute top-3 right-4 text-6xl font-black text-white opacity-10 select-none pointer-events-none leading-none">02</span>
               <span className="p-4 rounded-xl bg-electric-blue/10 text-electric-blue border border-electric-blue/20">
                 <Users className="h-6 w-6" />
@@ -168,7 +170,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="relative bg-navy-card/40 border border-navy-border border-l-4 border-l-gold p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)] overflow-hidden">
+            <div aria-label="Feature: Multilingual AI" className="relative bg-navy-card/40 border border-navy-border border-l-4 border-l-gold p-8 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(245,197,24,0.15)] overflow-hidden">
               <span className="absolute top-3 right-4 text-6xl font-black text-white opacity-10 select-none pointer-events-none leading-none">03</span>
               <span className="p-4 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                 <Languages className="h-6 w-6" />
@@ -180,6 +182,43 @@ export default function Home() {
             </div>
 
           </div>
+
+          {/* Volunteer Co-pilot Spotlight */}
+          <div aria-label="Feature: Volunteer Co-pilot" className="mt-10 relative bg-navy-card/40 border-2 border-gold/50 p-10 rounded-2xl flex flex-col items-start space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_40px_rgba(245,197,24,0.2)] overflow-hidden">
+            <span className="absolute top-3 right-4 text-7xl font-black text-gold opacity-5 select-none pointer-events-none leading-none">⭐</span>
+            <span className="p-4 rounded-xl bg-gold/10 text-gold border border-gold/30">
+              <Target className="h-7 w-7" />
+            </span>
+            <h3 className="text-2xl font-bold text-white">🎯 Volunteer Co-pilot</h3>
+            <p className="text-slate-400 text-base">The AI brain behind every zone manager</p>
+            <ul className="text-slate-300 text-sm space-y-2">
+              <li className="flex items-center gap-2"><span className="text-gold">•</span> Detects urgency from fan tone automatically</li>
+              <li className="flex items-center gap-2"><span className="text-gold">•</span> Generates PA announcements in 6 languages</li>
+              <li className="flex items-center gap-2"><span className="text-gold">•</span> Flags when to escalate to security</li>
+            </ul>
+          </div>
+
+          {/* How It Works Section */}
+          <section aria-label="How ArenaIQ works" className="mt-16">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-center text-white mb-8 tracking-tight">
+              Input → Reasoning → Action
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-navy-card/60 border border-electric-blue/30 rounded-xl p-6 text-center">
+                <h3 className="text-lg font-black text-electric-blue mb-3">📥 INPUT</h3>
+                <p className="text-slate-400 text-sm">Fan query + live zone density from Supabase Realtime</p>
+              </div>
+              <div className="bg-navy-card/60 border border-gold/30 rounded-xl p-6 text-center">
+                <h3 className="text-lg font-black text-gold mb-3">🧠 REASONING</h3>
+                <p className="text-slate-400 text-sm">Gemini detects urgency level, language, and context</p>
+              </div>
+              <div className="bg-navy-card/60 border border-emerald-500/30 rounded-xl p-6 text-center">
+                <h3 className="text-lg font-black text-emerald-400 mb-3">📢 ACTION</h3>
+                <p className="text-slate-400 text-sm">Multilingual response + PA announcement script for the volunteer to read aloud</p>
+              </div>
+            </div>
+          </section>
+
         </div>
       </section>
 

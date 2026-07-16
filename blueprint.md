@@ -211,3 +211,10 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 * Messages: `bg-gold/15 border-gold/30` user bubbles, `border-l-4 border-electric-blue` AI bubbles, ArenaIQ label above assistant messages
 * Animated `.typing-dot` indicator (electric-blue bouncing dots)
 * Round pill input + gold circle send button (ArrowUp icon)
+
+### 14. Graphify Installation & Codebase Mapping
+* Installed the `graphifyy` CLI tool inside a custom python virtual environment (`/home/user/.venv-graphify`) using python3 from the Nix packages environment.
+* Configured the system's `stdenv.cc.cc.lib` dynamically by creating a shell wrapper script at `/home/user/.local/bin/graphify` to resolve `libstdc++.so.6` for C-extensions (such as NumPy).
+* Registered Graphify skill for Google Antigravity globally and project-scoped to generate `.agents/skills/graphify/SKILL.md`, rules, and workflows.
+* Successfully generated the codebase knowledge graph using `graphify . --code-only` mapping 273 nodes, 354 edges, and 24 communities inside `graphify-out/`.
+

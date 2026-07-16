@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic'
 
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import AppShell from '@/components/layout/AppShell'
@@ -94,9 +94,19 @@ export default function DashboardPage() {
     if (zones.length === 0) return
     const channel = supabase
       .channel('live-zones')
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'zones' }, (payload) => {
+      .on('postgres_changes', { 
+        event: 'UPDATE',  // Only UPDATE events, not INSERT/DELETE
+        schema: 'public', 
+        table: 'zones' 
+      }, (payload) => {
         const updatedZone = payload.new as Zone
-        setZones((prev) => prev.map((z) => (z.id === updatedZone.id ? updatedZone : z)))
+        // Efficient: updates only the changed zone in O(n) without
+        // a full database refetch
+        setZones(prev => prev.map(z => 
+          z.id === updatedZone.id 
+            ? { ...z, ...updatedZone } 
+            : z
+        ))
         setLastUpdated(new Date())
 
         const prevOccupancy = prevZonesRef.current[updatedZone.id] ?? 0
@@ -130,10 +140,14 @@ export default function DashboardPage() {
     }
   }
 
-  // ── Derived stats ──────────────────────────────────────────
-  const totalFans = zones.reduce((s, z) => s + z.current_occupancy, 0)
-  const highDensityCount = zones.filter(z => z.current_occupancy / z.capacity >= 0.7).length
-  const openCount = zones.filter(z => z.status === 'open').length
+  // ── Derived stats (memoized to avoid recalculation on unrelated renders) ──
+  const stats = useMemo(() => ({
+    totalFans: zones.reduce((sum, z) => sum + (z.current_occupancy || 0), 0),
+    highDensityCount: zones.filter(z => 
+      z.status === 'crowded' || z.status === 'closed').length,
+    openCount: zones.filter(z => z.status === 'open').length,
+  }), [zones])
+  const { totalFans, highDensityCount, openCount } = stats
 
   if (loading) {
     return (

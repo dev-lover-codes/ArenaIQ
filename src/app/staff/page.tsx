@@ -46,8 +46,7 @@ export default function StaffPage() {
   const router = useRouter()
   const supabase = createClient()
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [profile, setProfile] = useState<any>(null)
+  const [profile, setProfile] = useState<{ role?: string; full_name?: string } | null>(null)
   const [zones, setZones] = useState<Zone[]>([])
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)

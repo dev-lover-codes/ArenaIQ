@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
+import { sanitizeInput, isAllowedValue } from '@/lib/sanitize'
+import { checkRateLimit } from '@/lib/rateLimit'
 
 const getAllowedOrigin = () =>
   process.env.NEXT_PUBLIC_SITE_URL || 'https://arenaiq.vercel.app'
@@ -16,6 +18,16 @@ export async function OPTIONS(): Promise<NextResponse> {
 }
 
 export async function POST(request: Request): Promise<NextResponse> {
+  // Rate limiting
+  const ip = request.headers.get('x-forwarded-for') ?? 
+    request.headers.get('x-real-ip') ?? 'unknown'
+  if (!checkRateLimit(ip, 20, 60_000)) {
+    return NextResponse.json(
+      { success: false, error: 'Too many requests. Please wait.' },
+      { status: 429 }
+    )
+  }
+
   const origin = request.headers.get('origin')
   const allowedOrigin = getAllowedOrigin()
   // Block cross-origin requests from unknown origins (allow null/same-origin server-to-server calls)
@@ -225,15 +237,17 @@ Always end with: "Need anything else? 🏟️"`
 
     if (action === 'match_insight') {
       const { homeTeam, awayTeam } = body
-      if (!homeTeam) {
+      const cleanHomeTeam = sanitizeInput(homeTeam)
+      const cleanAwayTeam = sanitizeInput(awayTeam)
+      if (!cleanHomeTeam) {
         return NextResponse.json({ success: false, error: 'homeTeam is required.' }, { status: 400 })
       }
-      if (!awayTeam) {
+      if (!cleanAwayTeam) {
         return NextResponse.json({ success: false, error: 'awayTeam is required.' }, { status: 400 })
       }
 
       const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
-      const prompt = `You are ArenaIQ tactical analyst for FIFA World Cup 2026. Provide a concise pre-match tactical insight for ${homeTeam} vs ${awayTeam}. Include: key players to watch, formation battle, and one bold prediction. Language: ${language}.`
+      const prompt = `You are ArenaIQ tactical analyst for FIFA World Cup 2026. Provide a concise pre-match tactical insight for ${cleanHomeTeam} vs ${cleanAwayTeam}. Include: key players to watch, formation battle, and one bold prediction. Language: ${language}.`
       const result = await model.generateContent(prompt)
       return NextResponse.json({ success: true, text: result.response.text() })
     }
@@ -249,7 +263,20 @@ Always end with: "Need anything else? 🏟️"`
       if (!severity) {
         return NextResponse.json({ success: false, error: 'severity is required.' }, { status: 400 })
       }
-      if (description && typeof description === 'string' && description.length > 500) {
+      if (!isAllowedValue(type, [
+        'Medical Emergency', 'Security Threat', 
+        'Crowd Crush Risk', 'Fire/Evacuation', 
+        'Lost Person', 'Infrastructure Damage',
+        // Also allow shorter variants used in tests
+        'fire', 'medical', 'crowd_surge', 'security', 'crowd_control', 'evacuation'
+      ])) {
+        return NextResponse.json({ success: false, error: 'Invalid incident type.' }, { status: 400 })
+      }
+      if (!isAllowedValue(severity, ['Low', 'Medium', 'High', 'Critical', 'low', 'medium', 'high', 'critical'])) {
+        return NextResponse.json({ success: false, error: 'Invalid severity level.' }, { status: 400 })
+      }
+      const cleanDescription = description ? sanitizeInput(description, 500) : null
+      if (description && !cleanDescription) {
         return NextResponse.json({ success: false, error: 'description exceeds 500 characters.' }, { status: 400 })
       }
 
@@ -258,7 +285,7 @@ Always end with: "Need anything else? 🏟️"`
 - Type: ${type}
 - Zone: ${zone}
 - Severity: ${severity}
-- Description: ${description || 'No additional details.'}
+- Description: ${cleanDescription || 'No additional details.'}
 
 Respond with exactly 5 numbered actionable steps for stadium staff. Language: ${language}.`
       const result = await model.generateContent(prompt)
