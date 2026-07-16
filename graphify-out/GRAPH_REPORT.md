@@ -1,15 +1,16 @@
-# Graph Report - .  (2026-07-16)
+# Graph Report - project-4  (2026-07-16)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 72 files · ~40,638 words
+- Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 273 nodes · 354 edges · 24 communities (20 shown, 4 thin omitted)
+- 398 nodes · 463 edges · 39 communities (29 shown, 10 thin omitted)
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `283fdd91`
+- Built from commit: `a96caddc`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -34,35 +35,49 @@
 - postcss.config.mjs
 - index.ts
 - tailwind.config.js
+- README.md
+- Phase 3 & 4 Progress (Completed)
+- **AI Development Guidelines for Next.js in Firebase Studio**
+- graphify reference: extra exports and benchmark
+- graphify reference: query, path, explain
+- graphify reference: add a URL and watch a folder
+- graphify reference: commit hook and native CLAUDE.md integration
+- graphify reference: incremental update and cluster-only
+- graphify reference: GitHub clone and cross-repo merge
+- graphify reference: transcribe video and audio
+- AGENTS.md
+- graphify.md
+- extraction-spec.md
+- graphify.md
 
 ## God Nodes (most connected - your core abstractions)
 1. `compilerOptions` - 16 edges
-2. `createClient()` - 13 edges
-3. `POST()` - 11 edges
-4. `scripts` - 8 edges
-5. `include` - 7 edges
-6. `POST()` - 6 edges
-7. `ErrorBoundary` - 6 edges
-8. `sanitizeInput()` - 6 edges
-9. `exclude` - 6 edges
-10. `npx` - 5 edges
+2. `Phase 3 & 4 Progress (Completed)` - 15 edges
+3. `createClient()` - 13 edges
+4. `What You Must Do When Invoked` - 12 edges
+5. `POST()` - 11 edges
+6. `/graphify` - 10 edges
+7. `scripts` - 8 edges
+8. `graphify reference: extra exports and benchmark` - 8 edges
+9. `**AI Development Guidelines for Next.js in Firebase Studio**` - 8 edges
+10. `include` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `POST()` --references--> `@google/generative-ai`  [EXTRACTED]
   src/app/api/gemini/route.ts → package.json
-- `POST()` --calls--> `calculateRoute()`  [EXTRACTED]
-  src/app/api/navigate/route.ts → src/lib/routing.ts
 - `GET()` --calls--> `createClient()`  [EXTRACTED]
   src/app/auth/callback/route.ts → src/lib/supabase/server.ts
 - `LoginPage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/login/page.tsx → src/lib/supabase/client.ts
 - `StaffPage()` --calls--> `createClient()`  [EXTRACTED]
   src/app/staff/page.tsx → src/lib/supabase/client.ts
+- `POST()` --calls--> `sanitizeInput()`  [EXTRACTED]
+  src/app/api/chat/route.ts → src/lib/sanitize.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (24 total, 4 thin omitted)
+## Communities (39 total, 10 thin omitted)
 
 ### Community 0 - "AppShell.tsx"
 Cohesion: 0.09
@@ -73,8 +88,8 @@ Cohesion: 0.06
 Nodes (35): autoprefixer, eslint, eslint-config-next, jsdom, devDependencies, autoprefixer, eslint, eslint-config-next (+27 more)
 
 ### Community 2 - "route.ts"
-Cohesion: 0.12
-Nodes (14): POST(), getAllowedOrigin(), OPTIONS(), POST(), createAdminClient(), POST(), createAdminClient(), GET() (+6 more)
+Cohesion: 0.09
+Nodes (18): POST(), getAllowedOrigin(), OPTIONS(), POST(), createAdminClient(), POST(), createAdminClient(), GET() (+10 more)
 
 ### Community 3 - "components.extended.test.tsx"
 Cohesion: 0.13
@@ -101,8 +116,8 @@ Cohesion: 0.17
 Nodes (11): name, private, scripts, build, dev, lint, start, test (+3 more)
 
 ### Community 9 - "routing.extended.test.ts"
-Cohesion: 0.29
-Nodes (4): calculateRoute(), Edge, RouteResult, Zone
+Cohesion: 0.08
+Nodes (24): For /graphify add and --watch, For /graphify query, For the commit hook and native CLAUDE.md integration, For --update and --cluster-only, /graphify, Honesty Rules, Interpreter guard for subcommands, Part A - Structural extraction for code files (+16 more)
 
 ### Community 10 - "page.tsx"
 Cohesion: 0.32
@@ -128,25 +143,57 @@ Nodes (3): GATES, LANGUAGES, ROLES
 Cohesion: 0.60
 Nodes (4): Assertion, AsymmetricMatchersContaining, CustomMatchers, vitest
 
+### Community 24 - "README.md"
+Cohesion: 0.08
+Nodes (24): 1. Configure Environment Variables, 2. Install Dependencies, 3. Run Development Server, 4. Run the Test Suite, 5. Build for Production, ArenaIQ — FIFA World Cup 2026 Volunteer Co-pilot, Chat Prompt Design, ⚙️ Crowd Simulation Mechanics (+16 more)
+
+### Community 25 - "Phase 3 & 4 Progress (Completed)"
+Cohesion: 0.10
+Nodes (20): 10. Wheelchair Routing & Expanded Test Suite, 11. FIFA World Cup 2026 Mission Control UI Redesign (Phase 7), 12. Persistent App Shell Redesign (Phase 8), 13. Page Content Redesign (Phase 8 — Interior), 14. Graphify Installation & Codebase Mapping, 1. Live Heatmap Dashboard (`/dashboard`), 2. Smart Navigation (`/navigate` & `/api/navigate`), 3. Multilingual Assistant Chat (`/assistant` & `/api/chat`) (+12 more)
+
+### Community 26 - "**AI Development Guidelines for Next.js in Firebase Studio**"
+Cohesion: 0.17
+Nodes (11): **AI Development Guidelines for Next.js in Firebase Studio**, **Automated Error Detection & Remediation**, **Code Modification & Dependency Management**, **Environment & Context Awareness**, **File-based Routing**, Firebase MCP, **Iterative Development & User Interaction**, **Next.js Core Concepts (App Router)** (+3 more)
+
+### Community 27 - "graphify reference: extra exports and benchmark"
+Cohesion: 0.22
+Nodes (8): graphify reference: extra exports and benchmark, Step 6b - Wiki (only if --wiki flag), Step 7 - Neo4j export (only if --neo4j or --neo4j-push flag), Step 7a - FalkorDB export (only if --falkordb or --falkordb-push flag), Step 7b - SVG export (only if --svg flag), Step 7c - GraphML export (only if --graphml flag), Step 7d - MCP server (only if --mcp flag), Step 8 - Token reduction benchmark (only if total_words > 5000)
+
+### Community 28 - "graphify reference: query, path, explain"
+Cohesion: 0.33
+Nodes (5): For /graphify explain, For /graphify path, graphify reference: query, path, explain, Step 0 — Constrained query expansion (REQUIRED before traversal), Step 1 — Traversal
+
+### Community 29 - "graphify reference: add a URL and watch a folder"
+Cohesion: 0.50
+Nodes (3): For /graphify add, For --watch, graphify reference: add a URL and watch a folder
+
+### Community 30 - "graphify reference: commit hook and native CLAUDE.md integration"
+Cohesion: 0.50
+Nodes (3): For git commit hook, For native CLAUDE.md integration, graphify reference: commit hook and native CLAUDE.md integration
+
+### Community 31 - "graphify reference: incremental update and cluster-only"
+Cohesion: 0.50
+Nodes (3): For --cluster-only, For --update (incremental re-extraction), graphify reference: incremental update and cluster-only
+
 ## Knowledge Gaps
-- **114 isolated node(s):** `STITCH_API_KEY`, `@supabase/mcp-server-supabase`, `SUPABASE_ACCESS_TOKEN`, `VERCEL_TOKEN`, `@21st-dev/magic` (+109 more)
+- **203 isolated node(s):** `STITCH_API_KEY`, `@supabase/mcp-server-supabase`, `SUPABASE_ACCESS_TOKEN`, `VERCEL_TOKEN`, `@21st-dev/magic` (+198 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `dependencies` connect `dependencies` to `scripts`?**
-  _High betweenness centrality (0.110) - this node is a cross-community bridge._
+  _High betweenness centrality (0.051) - this node is a cross-community bridge._
 - **Why does `devDependencies` connect `devDependencies` to `scripts`?**
-  _High betweenness centrality (0.087) - this node is a cross-community bridge._
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **Why does `POST()` connect `route.ts` to `dependencies`?**
-  _High betweenness centrality (0.085) - this node is a cross-community bridge._
+  _High betweenness centrality (0.040) - this node is a cross-community bridge._
 - **What connects `STITCH_API_KEY`, `@supabase/mcp-server-supabase`, `SUPABASE_ACCESS_TOKEN` to the rest of the system?**
-  _114 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _203 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `AppShell.tsx` be split into smaller, more focused modules?**
   _Cohesion score 0.08558558558558559 - nodes in this community are weakly interconnected._
 - **Should `devDependencies` be split into smaller, more focused modules?**
   _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
 - **Should `route.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.12477718360071301 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.09191919191919191 - nodes in this community are weakly interconnected._
