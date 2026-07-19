@@ -15,8 +15,8 @@ const config = {
         "navy-border": "#1e294b",
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "Inter", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "JetBrains Mono", "monospace"],
+        sans: ["var(--font-inter)", "Inter", "sans-serif"],
+        mono: ["var(--font-jetbrains-mono)", "JetBrains Mono", "monospace"],
       },
     },
   },

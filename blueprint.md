@@ -243,13 +243,29 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 
 ---
 
-## Phase 10 — Code Quality Audit and Remediation Pass (Current)
+## Phase 10 — Code Quality Audit and Remediation Pass (Completed)
 * **Section 1: Centralize duplicated type definitions**: Consolidated domain types under [src/types/index.ts](file:///home/user/project-4/src/types/index.ts). Fixed all type and import issues in hooks, routes, components, and test mocks. Verified build and tests pass. (Completed)
 * **Section 2: Extract magic strings into shared constants**: Extracted status styles and priority styles into [src/lib/constants.ts](file:///home/user/project-4/src/lib/constants.ts). Refactored `ZoneStatusTable.tsx`, `dashboard/page.tsx`, `TaskCard.tsx`, and `BroadcastForm.tsx` to consume these constants. (Completed)
 * **Section 3: Deduplicate test mock boilerplate**: Ensured the Supabase client mock factory under [src/__tests__/test-utils/mockSupabase.ts](file:///home/user/project-4/src/__tests__/test-utils/mockSupabase.ts) is imported and used in both test suites (`hooks.test.ts` and `production-components.test.tsx`), eliminating duplicated inline client setup. (Completed)
 * **Section 4: Type safety pass: remove non-null assertions**: Created [src/lib/env.ts](file:///home/user/project-4/src/lib/env.ts) to validate environment variables at startup time. Replaced unsafe non-null assertions on `process.env` in `client.ts`, `server.ts`, `middleware.ts`, `api/navigate/route.ts`, and `api/simulate-crowd/route.ts` with type-safe `env.*` helper calls. Setup test environment fallbacks in `vitest.setup.ts`. (Completed)
 * **Section 5: Enforce complexity limits via ESLint**: Added complexity (max 15), max-lines-per-function (max 80), and max-depth (max 4) rules to `.eslintrc.js`. Confirmed test files are bypassed using configuration overrides, and resolved/suppressed production warnings via inline comments explaining the inherent complexity of specific pages/hooks. (Completed)
 * **Section 6: JSDoc on all exported functions**: Added clean, comprehensive JSDoc headers specifying function behaviors, parameters, and return shapes above all exported functions in `src/lib/env.ts`, Supabase client/server/middleware config files, custom React hooks, and Gemini service handlers, mock generators, and prompt builders. (Completed)
+
+---
+
+## Phase 11 — Security Hardening, CVE Patch, and Build Isolation (Current)
+* **Fix 1: CSP Nonce Wiring**:
+  * Replace `src/lib/supabase/middleware.ts` to support optional extra headers and avoid dropping headers when setting cookies.
+  * Replace `src/middleware.ts` to generate cryptographically secure nonces and apply Content-Security-Policy header.
+  * Update `next.config.mjs` to remove the static redundant CSP headers.
+* **Fix 2: Next.js CVE Vulnerability Patch**:
+  * Bump `next` to `14.2.35` and `eslint-config-next` to `14.2.35`.
+  * Run `npm install` and verify package version matches.
+* **Fix 3: Build Isolation (Localizing fonts)**:
+  * Self-host Inter and JetBrains Mono variable fonts in `src/app/fonts/`.
+  * Update `src/app/layout.tsx` to use localFont.
+  * Validate compilation with offline-safe build and runs.
+
 
 
 

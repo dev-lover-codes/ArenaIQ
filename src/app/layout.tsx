@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from 'next/font/local'
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+const inter = localFont({
+  src: './fonts/Inter-Variable.woff2',
+  variable: '--font-inter',
+  display: 'swap',
+})
 
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const jetbrainsMono = localFont({
+  src: './fonts/JetBrainsMono-Variable.woff2',
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: "ArenaIQ — Smart Stadium Operations for FIFA World Cup 2026™",
