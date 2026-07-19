@@ -156,6 +156,11 @@ To guarantee safety, **Gemini is never allowed to invent paths**. A routing hall
 
 ---
 
+## 🔒 Security
+See [SECURITY.md](file:///home/user/project-4/SECURITY.md) for our dependency vulnerability posture and upgrade plan.
+
+---
+
 ## 🚀 Local Setup & Deployment
 
 ### 1. Configure Environment Variables

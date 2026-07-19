@@ -265,6 +265,10 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
   * Self-host Inter and JetBrains Mono variable fonts in `src/app/fonts/`.
   * Update `src/app/layout.tsx` to use localFont.
   * Validate compilation with offline-safe build and runs.
+* **Security Tradeoffs Documentation**:
+  * Create `SECURITY.md` in the project root detailing Next.js version tradeoffs and active mitigations.
+  * Reference `SECURITY.md` in `README.md`'s Security section.
+
 
 
 
