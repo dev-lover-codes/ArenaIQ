@@ -165,11 +165,3 @@ The Dijkstra engine will automatically recalculate paths, applying the 3× crowd
 | `/api/chat` | Chat session storage coordinator. | Supabase read/writes |
 | `/api/simulate-crowd` | Background randomizer simulating crowd movement. | Modifies occupancy database rows |
 
----
-
-## 🏆 Project Achievements & QA Standards
-- ✅ **98 / 98 tests passing** (Dijkstra routing, edge cases, accessibility scenarios, UI states, mocked Gemini and Supabase API endpoints).
-- ✅ **Zero compilation warnings/errors** under Next.js App Router.
-- ✅ **100% clean ESLint validation** (`--max-warnings=0`).
-- ✅ **WCAG 2.1 AA compliant colors and accessibility tags** (contrast ratios check, screen-reader support, dynamic text scales, visual keyboard focus).
-- ✅ **Google Cloud & Supabase OAuth configured** for rapid, secure federated sign-in.
