@@ -53,13 +53,15 @@ export function ChatInterface({
       {/* Chat header/controls */}
       <div className="flex justify-between items-center px-4 py-3 bg-zinc-900/60 border-b border-zinc-850">
         <div className="flex items-center space-x-2 text-slate-300">
-          <Languages className="h-4 w-4" />
-          <span className="text-xs font-semibold">Selector</span>
+          <Languages className="h-4 w-4" aria-hidden="true" />
+          <label htmlFor="chat-lang-selector" className="text-xs font-semibold">
+            Language
+          </label>
           <select
             id="chat-lang-selector"
             value={language}
             onChange={(e) => onLanguageChange(e.target.value)}
-            className="rounded-md border border-zinc-800 bg-zinc-950 py-1 px-2 text-xs font-semibold text-white focus:outline-hidden"
+            className="rounded-md border border-zinc-800 bg-zinc-950 py-1 px-2 text-xs font-semibold text-white focus:outline-none focus:ring-2 focus:ring-gold"
           >
             {LANGUAGES.map((l) => (
               <option key={l.code} value={l.code}>{l.name}</option>

@@ -1,5 +1,5 @@
-import { expect, test, describe } from 'vitest'
-import { cn, formatOccupancy, getDensityLevel } from '../lib/utils'
+import { expect, test, describe, vi } from 'vitest'
+import { cn, formatOccupancy, getDensityLevel, memoize } from '../lib/utils'
 
 describe('Utility Functions — comprehensive', () => {
 
@@ -122,6 +122,54 @@ describe('Utility Functions — comprehensive', () => {
 
     test("returns 'critical' for values > 1 (over-capacity)", () => {
       expect(getDensityLevel(1.5)).toBe('critical')
+    })
+  })
+
+  // ─── memoize() ──────────────────────────────────────────────────────────────
+
+  describe('memoize()', () => {
+    test('returns the same result for repeated calls with same args', () => {
+      const fn = vi.fn((x: number) => x * 2)
+      const memoized = memoize(fn as unknown as (...args: unknown[]) => unknown)
+      expect(memoized(5)).toBe(10)
+      expect(memoized(5)).toBe(10)
+    })
+
+    test('only calls the underlying function once per unique arg set', () => {
+      const fn = vi.fn((x: number) => x * 3)
+      const memoized = memoize(fn as unknown as (...args: unknown[]) => unknown)
+      memoized(4)
+      memoized(4)
+      memoized(4)
+      expect(fn).toHaveBeenCalledTimes(1)
+    })
+
+    test('calls the underlying function for each distinct arg set', () => {
+      const fn = vi.fn((x: number) => x + 1)
+      const memoized = memoize(fn as unknown as (...args: unknown[]) => unknown)
+      memoized(1)
+      memoized(2)
+      memoized(3)
+      expect(fn).toHaveBeenCalledTimes(3)
+    })
+
+    test('cache key distinguishes different argument types', () => {
+      const fn = vi.fn((x: unknown) => String(x))
+      const memoized = memoize(fn)
+      memoized(1)    // number 1
+      memoized('1')  // string "1"
+      expect(fn).toHaveBeenCalledTimes(2)
+    })
+
+    test('works with multi-argument functions', () => {
+      const fn = vi.fn((a: number, b: number) => a + b)
+      const memoized = memoize(fn as unknown as (...args: unknown[]) => unknown)
+      expect(memoized(2, 3)).toBe(5)
+      expect(memoized(2, 3)).toBe(5)
+      expect(fn).toHaveBeenCalledTimes(1)
+      // Different args → new call
+      expect(memoized(3, 2)).toBe(5)
+      expect(fn).toHaveBeenCalledTimes(2)
     })
   })
 })

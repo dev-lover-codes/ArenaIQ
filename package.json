@@ -1,5 +1,5 @@
 {
-  "name": "out",
+  "name": "arenaiq",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
-    "@supabase/server": "^1.3.0",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.45.4",
     "clsx": "^2.1.1",

@@ -218,3 +218,27 @@ All tables have Row Level Security (RLS) enabled with explicit non-test-mode pol
 * Registered Graphify skill for Google Antigravity globally and project-scoped to generate `.agents/skills/graphify/SKILL.md`, rules, and workflows.
 * Successfully generated the codebase knowledge graph using `graphify . --code-only` mapping 273 nodes, 354 edges, and 24 communities inside `graphify-out/`.
 
+### 15. Phase 9 — Code Quality Refactoring & Separation of Concerns (Current)
+* **Modular Gemini API Service**:
+  * Created helper modules under `src/lib/gemini/`: [prompts.ts](file:///home/user/project-4/src/lib/gemini/prompts.ts), [mockResponses.ts](file:///home/user/project-4/src/lib/gemini/mockResponses.ts), and [handlers.ts](file:///home/user/project-4/src/lib/gemini/handlers.ts).
+  * Refactored [route.ts](file:///home/user/project-4/src/app/api/gemini/route.ts) into a thin dispatcher under 80 lines of code.
+* **Separation of Page Concerns**:
+  * Extracted state, Supabase data-fetching, and real-time subscription logic from the four main pages into reusable custom React hooks:
+    * Dashboard: [useZones.ts](file:///home/user/project-4/src/hooks/useZones.ts)
+    * Navigate: [useRoutePlanner.ts](file:///home/user/project-4/src/hooks/useRoutePlanner.ts)
+    * Staff Panel: [useStaffTasks.ts](file:///home/user/project-4/src/hooks/useStaffTasks.ts)
+    * Assistant Chat: [useChatSession.ts](file:///home/user/project-4/src/hooks/useChatSession.ts)
+  * Modularized UI components into page-specific subdirectories under `src/components/`:
+    * Dashboard: [StatCard.tsx](file:///home/user/project-4/src/components/dashboard/StatCard.tsx), [MatchScoreboard.tsx](file:///home/user/project-4/src/components/dashboard/MatchScoreboard.tsx), and [ZoneCard.tsx](file:///home/user/project-4/src/components/dashboard/ZoneCard.tsx).
+    * Navigate: [RouteAlerts.tsx](file:///home/user/project-4/src/components/navigate/RouteAlerts.tsx) and [SpatialPathBreakdown.tsx](file:///home/user/project-4/src/components/navigate/SpatialPathBreakdown.tsx).
+    * Staff Panel: [BroadcastForm.tsx](file:///home/user/project-4/src/components/staff/BroadcastForm.tsx), [LiveAlertsFeed.tsx](file:///home/user/project-4/src/components/staff/LiveAlertsFeed.tsx), [ZoneStatusTable.tsx](file:///home/user/project-4/src/components/staff/ZoneStatusTable.tsx), and [TaskCard.tsx](file:///home/user/project-4/src/components/staff/TaskCard.tsx).
+    * Assistant Chat: [PAAnnouncementPanel.tsx](file:///home/user/project-4/src/components/assistant/PAAnnouncementPanel.tsx) and [MessageBubble.tsx](file:///home/user/project-4/src/components/assistant/MessageBubble.tsx).
+  * Simplified all four page entry points (`page.tsx` files) to under 150 lines, composing the hook + sub-components.
+* **Dependency & Lockfile Cleanup**:
+  * Removed unused dependency `@supabase/server` from `package.json`.
+  * Changed the package name to `"arenaiq"`.
+  * Re-generated the `package-lock.json` cleanly via `npm install`.
+* **Testing Integrity**:
+  * Confirmed that all **129/129 tests** in the test suite pass cleanly on every step.
+
+

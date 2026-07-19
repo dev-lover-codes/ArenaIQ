@@ -114,6 +114,23 @@ body {
 .glow-gold { box-shadow: 0 0 20px rgba(245, 197, 24, 0.2); }
 .glow-blue { box-shadow: 0 0 20px rgba(0, 168, 232, 0.2); }
 
+/* ─── Global focus-visible ring ──────────────────────────
+   Applies a gold ring to ALL interactive elements when
+   navigated via keyboard. Overrides browser default outlines
+   so every focusable element has a consistent, visible state.
+   Uses :focus-visible so mouse users are never affected.
+──────────────────────────────────────────────────────── */
+*:focus-visible {
+  outline: 2px solid #f5c518;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove the outline for elements that supply their own ring */
+.focus-ring-custom:focus-visible {
+  outline: none;
+}
+
 /* ─── Toggle Switch ───────────────────────────────────── */
 .toggle-switch {
   position: relative;
@@ -127,6 +144,15 @@ body {
   opacity: 0;
   width: 0;
   height: 0;
+  /* Keep the input in flow so :focus-within triggers on the label */
+  position: absolute;
+}
+
+/* Show a keyboard focus ring on the visible slider when the
+   hidden checkbox receives focus (keyboard navigation). */
+.toggle-switch:focus-within .toggle-slider {
+  outline: 2px solid #f5c518;
+  outline-offset: 2px;
 }
 
 .toggle-slider {

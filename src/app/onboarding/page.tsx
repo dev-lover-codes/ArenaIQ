@@ -60,8 +60,13 @@ export default function OnboardingPage() {
 
   return (
     <main role="main" className="min-h-screen bg-[#0a0f1e] flex flex-col items-center justify-center px-4 py-12">
+      {/* Screen reader announces step changes */}
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        Step {step + 1} of {steps.length}: {steps[step].title} — {steps[step].subtitle}
+      </div>
+
       {/* Progress dots */}
-      <div className="flex gap-2 mb-10">
+      <div className="flex gap-2 mb-10" role="progressbar" aria-valuenow={step + 1} aria-valuemin={1} aria-valuemax={steps.length} aria-label={`Step ${step + 1} of ${steps.length}`}>
         {steps.map((s, i) => (
           <div
             key={i}
@@ -91,7 +96,8 @@ export default function OnboardingPage() {
               <button
                 key={r.id}
                 onClick={() => setRole(r.id)}
-                className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${
+                aria-pressed={role === r.id}
+                className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
                   role === r.id
                     ? 'border-[#f5c518] bg-[#f5c518]/10 text-white'
                     : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/30'
@@ -115,7 +121,8 @@ export default function OnboardingPage() {
               <button
                 key={l.id}
                 onClick={() => setLanguage(l.id)}
-                className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left ${
+                aria-pressed={language === l.id}
+                className={`flex items-center gap-3 p-3 rounded-xl border transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
                   language === l.id
                     ? 'border-[#f5c518] bg-[#f5c518]/10 text-white'
                     : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/30'
@@ -135,7 +142,8 @@ export default function OnboardingPage() {
               <button
                 key={g.id}
                 onClick={() => setGate(g.id)}
-                className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left ${
+                aria-pressed={gate === g.id}
+                className={`flex items-center gap-4 p-4 rounded-xl border transition-all text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#f5c518] ${
                   gate === g.id
                     ? 'border-[#f5c518] bg-[#f5c518]/10 text-white'
                     : 'border-white/10 bg-white/5 text-slate-300 hover:border-white/30'
