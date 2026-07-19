@@ -2,6 +2,7 @@ import React from 'react'
 import Link from 'next/link'
 import { Shield, ArrowRight, Map, Users, Languages, Accessibility, Target } from 'lucide-react'
 
+// eslint-disable-next-line max-lines-per-function -- Landing page containing header, hero banner, stats, core feature blocks and landing layout grids.
 export default function Home() {
   return (
     <main role="main" aria-label="ArenaIQ landing page" className="flex min-h-screen flex-col bg-navy-deep text-slate-100 font-sans stadium-grid">

@@ -1,37 +1,24 @@
 import React from 'react';
-import { Task, Zone } from '@/hooks/useStaffTasks';
+import { Task, Zone } from '@/types';
+import { PRIORITY_STYLES, TASK_STATUS_STYLES } from '@/lib/constants';
 
 interface TaskCardProps {
   task: Task;
   zones: Zone[];
 }
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case 'urgent': return 'bg-red-500 text-white border-red-400';
-    case 'high': return 'bg-orange-500 text-white border-orange-400';
-    case 'medium': return 'bg-blue-500/20 text-blue-400 border-blue-500/30';
-    default: return 'bg-zinc-800 text-slate-300 border-zinc-700';
-  }
-};
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'completed': return 'text-emerald-400 border border-emerald-500/30 bg-emerald-500/10';
-    case 'in_progress': return 'text-amber-400 border border-amber-500/30 bg-amber-500/10';
-    default: return 'text-slate-400 border border-zinc-800 bg-zinc-900/60';
-  }
-};
-
 export default function TaskCard({ task, zones }: TaskCardProps) {
+  const priorityInfo = PRIORITY_STYLES[task.priority];
+  const statusInfo = TASK_STATUS_STYLES[task.status];
+
   return (
     <article className="border border-zinc-850 bg-zinc-950/60 p-4 rounded-xl flex items-start justify-between gap-4">
       <div className="space-y-1">
         <div className="flex items-center gap-2">
-          <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider ${getPriorityColor(task.priority)}`}>
+          <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider border ${priorityInfo.bg} ${priorityInfo.text} ${priorityInfo.border}`}>
             {task.priority}
           </span>
-          <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider ${getStatusColor(task.status)}`}>
+          <span className={`px-2 py-0.5 rounded-full text-[10px] uppercase font-bold tracking-wider ${statusInfo.className}`}>
             {task.status.replace('_', ' ')}
           </span>
         </div>

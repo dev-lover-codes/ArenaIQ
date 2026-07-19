@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Navigation, Loader2, Zap } from 'lucide-react';
-import { Zone } from '@/hooks/useRoutePlanner';
+import { Zone } from '@/types';
+import { ZONE_STATUS_STYLES } from '@/lib/constants';
 
 interface RouteFormProps {
   zones: Zone[];
@@ -26,11 +27,15 @@ const LANGUAGES = [
 ];
 
 function statusBadge(status: Zone['status']) {
-  if (status === 'closed')  return <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest border status-closed">CLOSED</span>;
-  if (status === 'crowded') return <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest border status-crowded">CROWDED</span>;
-  return <span className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest border status-open">OPEN</span>;
+  const style = ZONE_STATUS_STYLES[status];
+  return (
+    <span className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-black tracking-widest ${style.className}`}>
+      {style.label}
+    </span>
+  );
 }
 
+// eslint-disable-next-line max-lines-per-function -- Form layout component wrapping selectors, custom wheelchair toggles and localized trigger buttons.
 export default function RouteForm({
   zones,
   startZone,

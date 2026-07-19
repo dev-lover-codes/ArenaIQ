@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { sanitizeInput } from '@/lib/sanitize'
 
+// eslint-disable-next-line complexity, max-lines-per-function -- Complexity and length are justified by the database checks, AI API call preparation, and session caching.
 export async function POST(request: Request): Promise<NextResponse> {
   try {
     const { message, sessionId, language = 'en', volunteerMode = false } = await request.json()

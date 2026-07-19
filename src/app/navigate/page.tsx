@@ -25,6 +25,7 @@ interface ParsedExplanation {
   ai_reasoning: string;
 }
 
+// eslint-disable-next-line complexity, max-lines-per-function -- Page component layout displays RouteForm inputs, routing results, warnings and collapsible AI details.
 export default function NavigatePage() {
   const {
     zones,

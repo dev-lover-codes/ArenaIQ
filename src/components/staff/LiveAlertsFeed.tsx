@@ -1,6 +1,6 @@
 import React from 'react';
 import { Bell, ShieldAlert } from 'lucide-react';
-import { AlertBroadcast } from '@/hooks/useStaffTasks';
+import { AlertBroadcast } from '@/types';
 
 interface LiveAlertsFeedProps {
   activeAlerts: AlertBroadcast[];

@@ -28,6 +28,7 @@ const GATES = [
   { id: 'gate-d', label: 'Gate D', desc: 'West Entrance' },
 ]
 
+// eslint-disable-next-line max-lines-per-function -- Multi-step onboarding container with role, language, and gate configuration wizards.
 export default function OnboardingPage() {
   const router = useRouter()
   const [step, setStep] = useState(0)

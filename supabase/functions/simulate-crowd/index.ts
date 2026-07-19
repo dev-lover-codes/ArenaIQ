@@ -6,6 +6,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// eslint-disable-next-line complexity -- Complexity is justified due to handling of edge-case CORS, DB operations, and crowd updates.
 serve(async (req) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {

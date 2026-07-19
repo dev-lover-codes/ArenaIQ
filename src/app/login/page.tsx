@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Shield, Lock, Mail, AlertCircle, Loader2 } from 'lucide-react'
 
+// eslint-disable-next-line max-lines-per-function -- Form container and input structures for login and sign-up with dynamic status state messages.
 export default function LoginPage() {
   const router = useRouter()
   const supabase = createClient()

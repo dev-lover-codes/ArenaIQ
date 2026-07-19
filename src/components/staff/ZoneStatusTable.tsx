@@ -1,6 +1,7 @@
 import React from 'react';
 import { LayoutGrid } from 'lucide-react';
-import { Zone } from '@/hooks/useStaffTasks';
+import { Zone } from '@/types';
+import { ZONE_STATUS_STYLES } from '@/lib/constants';
 
 interface ZoneStatusTableProps {
   zones: Zone[];
@@ -41,7 +42,7 @@ export default function ZoneStatusTable({ zones, updateZoneStatus }: ZoneStatusT
                     id={`zone-status-${zone.id}`}
                     value={zone.status}
                     onChange={(e) => updateZoneStatus(zone.id, e.target.value as 'open' | 'crowded' | 'closed')}
-                    className="bg-zinc-950 border border-zinc-800 rounded-md py-1 px-2.5 text-xs text-white focus:border-emerald-500 focus:outline-hidden"
+                    className={`bg-zinc-950 border rounded-md py-1 px-2.5 text-xs focus:outline-hidden transition-colors duration-150 ${ZONE_STATUS_STYLES[zone.status].border} ${ZONE_STATUS_STYLES[zone.status].text}`}
                   >
                     <option value="open">Open</option>
                     <option value="crowded">Crowded</option>

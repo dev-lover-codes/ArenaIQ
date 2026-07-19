@@ -5,14 +5,7 @@ export interface Edge {
   is_step_free?: boolean
 }
 
-export interface Zone {
-  id: string
-  name: string
-  status: 'open' | 'crowded' | 'closed'
-  capacity?: number
-  current_occupancy?: number
-  has_elevator?: boolean
-}
+import { Zone } from '@/types'
 
 export interface RouteResult {
   path: string[]           // List of zone IDs
@@ -38,6 +31,7 @@ export interface RouteResult {
  * @param wheelchairMode - When true, only step-free edges are traversed
  * @returns A RouteResult with the optimal path, or null if no path exists
  */
+// eslint-disable-next-line complexity, max-lines-per-function -- Complexity and function length are inherent to the graph traversal & path reconstruction logic of Dijkstra's algorithm.
 export function calculateRoute(
   zones: Zone[],
   edges: Edge[],

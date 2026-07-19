@@ -1,3 +1,15 @@
+/**
+ * Builds the structured JSON prompt for route directions and accessibility details.
+ * 
+ * @param startZoneName - Name of the start zone.
+ * @param endZoneName - Name of the target destination zone.
+ * @param pathNames - Pre-computed optimal path of zone names.
+ * @param rawTime - Estimated walking time in seconds.
+ * @param congestedZones - Array of congested zone names traversed.
+ * @param zoneContext - Complete current stadium zones status context from database.
+ * @param language - Target output language code.
+ * @returns The generated prompt string.
+ */
 export function buildNavigatePrompt(
   startZoneName: string,
   endZoneName: string,
@@ -46,6 +58,12 @@ Now generate the navigation response for the actual fan above.
 Respond ONLY in JSON matching the example format. Language for step text: "${language}".`;
 }
 
+/**
+ * Builds system instructions for the volunteer assistant chat co-pilot.
+ * 
+ * @param language - Target localized language code.
+ * @returns The system instructions string.
+ */
 export function buildVolunteerSystemInstruction(language: string) {
   return `You are ArenaIQ co-pilot for a FIFA World Cup 2026 volunteer. The volunteer is managing a zone with potentially 4,000 fans. Help them:
 - Answer multilingual fan queries
@@ -69,6 +87,12 @@ URGENCY GUIDELINES:
 - CRITICAL: medical emergency, fight, security threat, crush risk`;
 }
 
+/**
+ * Builds standard system instructions for the fan support chatbot.
+ * 
+ * @param language - Target localized language code.
+ * @returns The system instructions string.
+ */
 export function buildChatSystemInstruction(language: string) {
   return `You are ArenaIQ, the official FIFA World Cup 2026 AI assistant. You ONLY answer questions about: stadium navigation, match schedules, facilities, food, security, medical, and accessibility. You detect urgency in tone.
 
@@ -84,10 +108,28 @@ Always respond in: ${language}
 Always end with: "Need anything else? 🏟️"`;
 }
 
+/**
+ * Builds prompt payload for match operational insights.
+ * 
+ * @param homeTeam - Home team country name.
+ * @param awayTeam - Away team country name.
+ * @param language - Desired reply language code.
+ * @returns Generated prompt string.
+ */
 export function buildMatchInsightPrompt(homeTeam: string, awayTeam: string, language: string) {
   return `You are ArenaIQ tactical analyst for FIFA World Cup 2026. Provide a concise pre-match tactical insight for ${homeTeam} vs ${awayTeam}. Include: key players to watch, formation battle, and one bold prediction. Language: ${language}.`;
 }
 
+/**
+ * Builds prompt payload for incident command protocols.
+ * 
+ * @param type - Type of incident.
+ * @param zone - Incident location zone name.
+ * @param severity - Severity rating.
+ * @param description - Custom logs description or null.
+ * @param language - Desired reply language code.
+ * @returns Generated prompt string.
+ */
 export function buildIncidentPrompt(type: string, zone: string, severity: string, description: string | null, language: string) {
   return `You are ArenaIQ incident coordinator for FIFA World Cup 2026. Generate a clear 5-step response protocol for the following stadium incident:
 - Type: ${type}

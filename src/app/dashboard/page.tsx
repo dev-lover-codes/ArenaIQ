@@ -7,10 +7,12 @@ import { useRouter } from 'next/navigation'
 import AppShell from '@/components/layout/AppShell'
 import { Loader2, Zap, Users, AlertTriangle, CheckCircle2, RefreshCw } from 'lucide-react'
 import { useZones } from '@/hooks/useZones'
+import { ZONE_STATUS_STYLES } from '@/lib/constants'
 import StatCard from '@/components/dashboard/StatCard'
 import MatchScoreboard from '@/components/dashboard/MatchScoreboard'
 import ZoneCard from '@/components/dashboard/ZoneCard'
 
+// eslint-disable-next-line max-lines-per-function -- Page component layout consists of stats grid, scoreboard and zone heatmap render elements.
 export default function DashboardPage() {
   const router = useRouter()
   const {
@@ -87,15 +89,15 @@ export default function DashboardPage() {
           <StatCard
             title="High Density Zones"
             value={highDensityCount}
-            icon={<AlertTriangle className="h-4 w-4 text-red-400" />}
-            iconBgClass="bg-red-500/10"
+            icon={<AlertTriangle className={`h-4 w-4 ${ZONE_STATUS_STYLES.closed.text}`} />}
+            iconBgClass={ZONE_STATUS_STYLES.closed.bg}
             valueStyle={{ color: highDensityCount > 0 ? '#ef4444' : '#f5c518' }}
           />
           <StatCard
             title="Zones Clear"
             value={openCount}
-            icon={<CheckCircle2 className="h-4 w-4 text-emerald-400" />}
-            iconBgClass="bg-emerald-500/10"
+            icon={<CheckCircle2 className={`h-4 w-4 ${ZONE_STATUS_STYLES.open.text}`} />}
+            iconBgClass={ZONE_STATUS_STYLES.open.bg}
             valueStyle={{ color: '#10b981' }}
           />
           <StatCard

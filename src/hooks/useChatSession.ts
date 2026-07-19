@@ -3,21 +3,7 @@ import { useRouter } from 'next/navigation';
 import type { User } from '@supabase/supabase-js';
 import { createClient } from '@/lib/supabase/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
-
-export interface Message {
-  role: 'user' | 'model';
-  text: string;
-  timestamp?: string;
-  copilot?: VolunteerCopilotPayload;
-}
-
-export interface VolunteerCopilotPayload {
-  response: string;
-  announcement?: string;
-  urgency: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
-  escalate: boolean;
-  reason: string;
-}
+import type { Message, VolunteerCopilotPayload } from '@/types';
 
 function getTimestamp(): string {
   return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -35,6 +21,14 @@ function tryParseCopilot(text: string): VolunteerCopilotPayload | null {
   }
 }
 
+/**
+ * Custom React hook for managing the multilingual AI Assistant session.
+ * Connects active chat messages list, message input state, user settings, preferred translation language,
+ * and handles dispatching messages to the Gemini chat API.
+ * 
+ * @returns State properties, message sender triggers, and session controllers.
+ */
+// eslint-disable-next-line max-lines-per-function -- State management hook that handles message lists, session states, translation settings, and Supabase interaction.
 export function useChatSession() {
   const router = useRouter();
   // Stabilize the client so useCallback / useEffect deps don't cycle

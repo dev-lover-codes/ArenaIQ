@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
-import { calculateRoute, Zone, Edge } from '@/lib/routing'
+import { calculateRoute, Edge } from '@/lib/routing'
+import type { Zone } from '@/types'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { env } from '@/lib/env'
 
 function createAdminClient(): SupabaseClient | null {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseUrl = env.SUPABASE_URL()
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!supabaseServiceKey) {
     return null
@@ -37,7 +39,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     // 1. Fetch zones and edges
     // O(E log V) Dijkstra — parallel data fetch for efficiency
     const [zonesRes, edgesRes] = await Promise.all([
-      supabase.from('zones').select('id, name, status, capacity, current_occupancy, has_elevator'),
+      supabase.from('zones').select('id, name, section, status, capacity, current_occupancy, has_elevator'),
       supabase.from('zone_edges').select('zone_a_id, zone_b_id, walk_time_seconds, is_step_free')
     ])
 

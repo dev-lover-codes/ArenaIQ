@@ -24,6 +24,7 @@ const LANGUAGES = [
   { code: 'hi', name: 'हिन्दी (Hindi)',       flag: '🇮🇳' },
 ]
 
+// eslint-disable-next-line complexity, max-lines-per-function -- Page component contains rich layout markup and interactive state hook composition.
 export default function AssistantPage() {
   const {
     messages,

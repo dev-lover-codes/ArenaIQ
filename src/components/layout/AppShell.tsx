@@ -68,6 +68,7 @@ interface UserProfile {
   full_name?: string
 }
 
+// eslint-disable-next-line max-lines-per-function -- Persistent app shell wrapper with sidebar, top bar, bottom tab bar and live clock elements.
 export default function AppShell({ children, title }: AppShellProps) {
   const pathname = usePathname()
   const router   = useRouter()

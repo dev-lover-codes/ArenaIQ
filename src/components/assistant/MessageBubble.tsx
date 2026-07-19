@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldAlert, User as UserIcon } from 'lucide-react';
-import { Message } from '@/hooks/useChatSession';
+import { Message } from '@/types';
 import PAAnnouncementPanel from './PAAnnouncementPanel';
 
 interface MessageBubbleProps {

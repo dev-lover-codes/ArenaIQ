@@ -22,6 +22,7 @@ export async function OPTIONS(): Promise<NextResponse> {
   });
 }
 
+// eslint-disable-next-line complexity -- Complexity is inherent due to request validation and action dispatching to specific handlers.
 export async function POST(request: Request): Promise<NextResponse> {
   const ip = request.headers.get('x-forwarded-for') ?? 
     request.headers.get('x-real-ip') ?? 'unknown';

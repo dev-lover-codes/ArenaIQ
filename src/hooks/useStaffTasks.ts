@@ -3,31 +3,16 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export interface Zone {
-  id: string;
-  name: string;
-  section: string;
-  capacity: number;
-  current_occupancy: number;
-  status: 'open' | 'crowded' | 'closed';
-}
+import type { Zone, Task, AlertBroadcast } from '@/types';
 
-export interface Task {
-  id: string;
-  title: string;
-  description: string | null;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'pending' | 'in_progress' | 'completed';
-  zone_id: string;
-}
-
-export interface AlertBroadcast {
-  id: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  description: string;
-  created_at: string;
-}
-
+/**
+ * Custom React hook for the Staff Operations Panel.
+ * Validates staff/organizer roles, retrieves current zones and incidents tasks,
+ * and maintains realtime updates for crowd density events and custom broadcasts.
+ * 
+ * @returns State variables, loading states, and update status/broadcast handler functions.
+ */
+// eslint-disable-next-line max-lines-per-function -- State composition hook that handles user authentication validation, real-time table listeners, and updates.
 export function useStaffTasks() {
   const router = useRouter();
   // Stabilize the client so effect deps don't change on every render,

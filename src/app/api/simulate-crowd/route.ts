@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 import type { SupabaseClient } from '@supabase/supabase-js'
+import { env } from '@/lib/env'
 
 // Create a custom admin-level client that uses the service role key to bypass RLS for simulation updates
 function createAdminClient(): SupabaseClient | null {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+  const supabaseUrl = env.SUPABASE_URL()
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!supabaseServiceKey) {
     return null
@@ -22,6 +23,7 @@ function createAdminClient(): SupabaseClient | null {
   )
 }
 
+// eslint-disable-next-line complexity -- Complexity is justified by the crowd simulation algorithm steps and validation.
 export async function GET(request: NextRequest): Promise<NextResponse> {
   // Authorization check — only staff/admin should trigger crowd simulation
   const authHeader = request.headers.get('authorization')

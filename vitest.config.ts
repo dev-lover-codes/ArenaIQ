@@ -12,22 +12,24 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      // Only measure coverage on pure library logic — pages, components, hooks,
-      // and supabase wrappers depend on browser/Supabase APIs and are covered
-      // at integration level, not in vitest unit tests.
-      include: ['src/lib/**/*.{ts,tsx}'],
+      include: [
+        'src/lib/**/*.{ts,tsx}',
+        'src/components/**/*.{ts,tsx}',
+        'src/hooks/**/*.{ts,tsx}',
+      ],
       exclude: [
         'src/lib/supabase/**',
         'src/lib/data/**',
+        'src/components/ui/**',
         'src/**/*.test.{ts,tsx}',
         'src/**/*.spec.{ts,tsx}',
         'src/__tests__/**',
       ],
       thresholds: {
-        lines: 85,
-        functions: 85,
-        branches: 75,
-        statements: 85,
+        lines: 92,
+        functions: 89,
+        branches: 82,
+        statements: 92,
       },
     },
   },

@@ -6,9 +6,10 @@ interface StatCardProps {
   icon: React.ReactNode;
   iconBgClass: string;
   valueStyle?: React.CSSProperties;
+  trend?: string;
 }
 
-export default function StatCard({ title, value, icon, iconBgClass, valueStyle }: StatCardProps) {
+export default function StatCard({ title, value, icon, iconBgClass, valueStyle, trend }: StatCardProps) {
   return (
     <div className="arena-card flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -18,6 +19,7 @@ export default function StatCard({ title, value, icon, iconBgClass, valueStyle }
         </span>
       </div>
       <p className="stat-number" style={valueStyle}>{value}</p>
+      {trend && <p className="text-xs text-slate-400 mt-1">{trend}</p>}
     </div>
   );
 }

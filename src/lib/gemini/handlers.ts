@@ -14,6 +14,14 @@ import {
 } from './mockResponses';
 import { sanitizeInput, isAllowedValue } from '@/lib/sanitize';
 
+/**
+ * Handles generating localized route descriptions with GenAI (Gemini) or mock responses.
+ * 
+ * @param body - The request payload containing route breakdown data.
+ * @param genAI - The GoogleGenerativeAI client instance (or null to use mocks).
+ * @param language - The desired output language code.
+ * @returns A Promise resolving to the JSON route details response string.
+ */
 export async function handleNavigate(
   body: Record<string, unknown>,
   genAI: GoogleGenerativeAI | null,
@@ -48,6 +56,14 @@ export async function handleNavigate(
   return result.response.text();
 }
 
+/**
+ * Processes chat messages, applying system guidelines for fan support or volunteer copilot mode.
+ * 
+ * @param body - Request payload with message history and active prompt.
+ * @param genAI - The GoogleGenerativeAI client instance (or null to use mocks).
+ * @param language - Target translation language code.
+ * @returns A Promise resolving to the chat reply.
+ */
 export async function handleChat(
   body: Record<string, unknown>,
   genAI: GoogleGenerativeAI | null,
@@ -93,6 +109,14 @@ export async function handleChat(
   return result.response.text();
 }
 
+/**
+ * Generates match operational predictions and insights between teams.
+ * 
+ * @param body - Request body containing homeTeam and awayTeam names.
+ * @param genAI - The GoogleGenerativeAI client instance (or null to use mocks).
+ * @param language - Desired response language code.
+ * @returns Promise resolving to operational match preview advice.
+ */
 export async function handleMatchInsight(
   body: Record<string, unknown>,
   genAI: GoogleGenerativeAI | null,
@@ -122,6 +146,14 @@ export async function handleMatchInsight(
   return result.response.text();
 }
 
+/**
+ * Produces action protocol guidelines when stadium incidents are logged.
+ * 
+ * @param body - Request payload detailing incident type, location, severity, and description.
+ * @param genAI - The GoogleGenerativeAI client instance (or null to use mocks).
+ * @param language - Target communication language code.
+ * @returns Promise resolving to step-by-step incident response procedures.
+ */
 export async function handleIncidentResponse(
   body: Record<string, unknown>,
   genAI: GoogleGenerativeAI | null,
@@ -170,6 +202,13 @@ export async function handleIncidentResponse(
   return result.response.text();
 }
 
+/**
+ * General-purpose dispatcher to run arbitrary prompts against Gemini or fallback mock responses.
+ * 
+ * @param body - Request payload with the raw prompt and optional model parameter.
+ * @param genAI - The GoogleGenerativeAI client instance (or null to use mocks).
+ * @returns Promise resolving to text output from Gemini model.
+ */
 export async function handleGenericPrompt(
   body: Record<string, unknown>,
   genAI: GoogleGenerativeAI | null

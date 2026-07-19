@@ -1,16 +1,16 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Zone } from '@/types';
 
-export interface Zone {
-  id: string;
-  name: string;
-  section: string;
-  capacity: number;
-  current_occupancy: number;
-  status: 'open' | 'crowded' | 'closed';
-}
-
+/**
+ * Custom React hook for fetching and subscribing to live stadium zones.
+ * Tracks crowd density levels in real-time using Supabase database subscriptions.
+ * Exposes zone details, loading state, simulation triggers, and summary stats.
+ * 
+ * @returns An object containing live zones array, loading states, sim trigger, and computed statistics.
+ */
+// eslint-disable-next-line max-lines-per-function -- Custom hook managing zone records state, polling updates, and calculation statistics.
 export function useZones() {
   // Stabilize the client reference so effect deps don't change on every render,
   // preventing unnecessary re-fetches and duplicate realtime subscriptions.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Zone } from '@/hooks/useZones';
+import { Zone } from '@/types';
 
 interface ZoneCardProps {
   zone: Zone;

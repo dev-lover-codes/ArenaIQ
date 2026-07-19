@@ -1,12 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import type { SupabaseClient } from '@supabase/supabase-js';
-
-export interface Zone {
-  id: string;
-  name: string;
-  status: 'open' | 'crowded' | 'closed';
-}
+import type { Zone } from '@/types';
 
 export interface RouteResponse {
   success: boolean;
@@ -19,6 +14,13 @@ export interface RouteResponse {
   error?: string;
 }
 
+/**
+ * Custom React hook for driving the Smart Route Planner UI.
+ * Connects departure/destination selection states, accessibility toggles,
+ * localized language configurations, and handles the API requests to Dijkstra & Gemini server endpoints.
+ * 
+ * @returns State properties and change handlers for navigation forms and routing outcomes.
+ */
 export function useRoutePlanner() {
   // Stabilize the client so the effect dep doesn't change on every render.
   const supabaseRef = useRef<SupabaseClient | null>(null);
@@ -39,7 +41,7 @@ export function useRoutePlanner() {
     const fetchZones = async () => {
       const { data, error } = await supabase
         .from('zones')
-        .select('id, name, status')
+        .select('*')
         .order('name', { ascending: true });
       if (!error && data) setZones(data);
       setLoadingZones(false);
